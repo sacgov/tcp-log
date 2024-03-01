@@ -8,7 +8,7 @@ const host = "0.0.0.0";
 const server = require('./server');
 const sockInfo = server.startServer();
 
-app.use(helmet());
+// app.use(helmet());
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
