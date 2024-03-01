@@ -24,45 +24,37 @@
     </style>
   </head>
   <body>
-
-    
     <ul id="messages"></ul>
     <div id="lastUpdate"></div>
     <script>
+      const lastUpdatedText = () => {
+        return "  Last Updated : " + new Date().toLocaleString();
+      };
 
-        const lastUpdatedText = ()=>{
-            return "  Last Updated : " + new Date().toLocaleString();
-        }
-        
       const lastUpdatedEle = document.getElementById("lastUpdate");
       lastUpdatedEle.innerHTML = lastUpdatedText();
       const messageUL = document.getElementById("messages");
 
       const displayData = (messages) => {
-        messageUL.innerHTML = '';
-        
+        messageUL.innerHTML = "";
 
-        for(let i =0;i<messages.length; i++) {
-            let msg = messages[i];
-            // msg = encodeURIComponent(msg)
-            const item = document.createElement('li');
-            item.textContent = msg;
-            messageUL.appendChild(item);
-            window.scrollTo(0, document.body.scrollHeight);
-            
+        for (let i = 0; i < messages.length; i++) {
+          let msg = messages[i];
+          // msg = encodeURIComponent(msg)
+          const item = document.createElement("li");
+          item.textContent = msg;
+          messageUL.appendChild(item);
+          window.scrollTo(0, document.body.scrollHeight);
         }
-
       };
-      setInterval(() =>{
+      setInterval(() => {
         lastUpdatedEle.innerHTML = lastUpdatedText();
         fetch("/messages")
-        .then((response) => response.json())
-        .then(data => {
+          .then((response) => response.json())
+          .then((data) => {
             displayData(data.messages);
-        } );
-
-      },10000)
-      
+          });
+      }, 10000);
     </script>
   </body>
 </html>

@@ -1,12 +1,11 @@
 const net = require("net");
-const moment = require('moment');
+const moment = require("moment");
 const port = 7070;
 const host = "0.0.0.0";
 
 const startServer = () => {
-
-    const sockInfo = {};
-    sockInfo.listMessages = [];
+  const sockInfo = {};
+  sockInfo.listMessages = [];
   const server = net.createServer();
   server.listen(port, host, () => {
     console.log("TCP Server is running on port " + port + ".");
@@ -23,8 +22,15 @@ const startServer = () => {
     sock.on("data", function (data) {
       // Write the data back to all the connected, the client will receive it as data from the server
       const message =
-        sock.remoteAddress + ":" + sock.remotePort + " - " + moment().utcOffset("+05:30").format()+" - " + data;
-        sockInfo.listMessages.push(message);
+        sock.remoteAddress +
+        ":" +
+        sock.remotePort +
+        " - " +
+        moment().utcOffset("+05:30").format() +
+        " - " +
+        data;
+      console.log(message);
+      sockInfo.listMessages.push(message);
       if (sockInfo.listMessages.length > 100) {
         sockInfo.listMessages.shift();
       }
@@ -43,9 +49,9 @@ const startServer = () => {
     });
   });
 
-  return sockInfo
+  return sockInfo;
 };
 
 module.exports = {
-    startServer
-}
+  startServer,
+};
