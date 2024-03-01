@@ -28,7 +28,7 @@
     <div id="lastUpdate"></div>
     <script>
       const lastUpdatedText = () => {
-        return "  Last Updated : " + new Date().toLocaleString();
+        return "  Last Browser Refreshed: " + new Date().toLocaleString();
       };
 
       const lastUpdatedEle = document.getElementById("lastUpdate");
@@ -54,7 +54,7 @@
           .then((data) => {
             displayData(data.messages);
           });
-      }, 10000);
+      }, 5000);
     </script>
   </body>
 </html>
