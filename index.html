@@ -39,6 +39,8 @@
       const messageUL = document.getElementById("messages");
 
       const displayData = (messages) => {
+        messageUL.innerHTML = '';
+        
 
         for(let i =0;i<messages.length; i++) {
             let msg = messages[i];
