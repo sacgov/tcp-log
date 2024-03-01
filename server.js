@@ -1,7 +1,7 @@
 const net = require("net");
 const moment = require('moment');
 const port = 7070;
-const host = "127.0.0.1";
+const host = "0.0.0.0";
 
 const startServer = () => {
 
