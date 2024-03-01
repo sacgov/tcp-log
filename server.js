@@ -3,6 +3,10 @@ const moment = require("moment");
 const port = 7070;
 const host = "0.0.0.0";
 
+const curTime = () => {
+  return moment().utcOffset("+05:30").format()
+}
+
 const startServer = () => {
   const sockInfo = {};
   sockInfo.listMessages = [];
@@ -14,7 +18,7 @@ const startServer = () => {
   let sockets = [];
 
   server.on("connection", function (sock) {
-    console.log("CONNECTED: " + sock.remoteAddress + ":" + sock.remotePort);
+    console.log("CONNECTED: " + curTime() + " "+ sock.remoteAddress + ":" + sock.remotePort);
     sockets.push(sock);
 
     sock.setEncoding("hex");
@@ -26,10 +30,10 @@ const startServer = () => {
         ":" +
         sock.remotePort +
         " - " +
-        moment().utcOffset("+05:30").format() +
+        curTime() +
         " - " +
         data;
-      console.log(message);
+      // console.log(message);
       sockInfo.listMessages.push(message);
       if (sockInfo.listMessages.length > 100) {
         sockInfo.listMessages.shift();
@@ -45,7 +49,7 @@ const startServer = () => {
         );
       });
       if (index !== -1) sockets.splice(index, 1);
-      console.log("CLOSED: " + sock.remoteAddress + " " + sock.remotePort);
+      console.log("CLOSED: " + curTime() + " " + sock.remoteAddress + " " + sock.remotePort);
     });
   });
 
