@@ -58,6 +58,8 @@ const startServer = () => {
     });
   });
 
+  server.on('error', console.log);
+
   return sockInfo;
 };
 
