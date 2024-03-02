@@ -18,7 +18,10 @@ const startServer = () => {
   let sockets = [];
 
   server.on("connection", function (sock) {
-    console.log("CONNECTED: " + curTime() + " "+ sock.remoteAddress + ":" + sock.remotePort);
+    const connectionMsg = `CONNECTED: ${curTime()} - ${sock.remoteAddress} :${sock.remotePort}`;
+    console.log(connectionMsg);
+    sockInfo.listMessages.push(connectionMsg);
+    
     sockets.push(sock);
 
     sock.setEncoding("hex");
@@ -35,7 +38,7 @@ const startServer = () => {
         data;
       // console.log(message);
       sockInfo.listMessages.push(message);
-      if (sockInfo.listMessages.length > 100) {
+      while (sockInfo.listMessages.length > 100) {
         sockInfo.listMessages.shift();
       }
     });
@@ -49,7 +52,9 @@ const startServer = () => {
         );
       });
       if (index !== -1) sockets.splice(index, 1);
-      console.log("CLOSED: " + curTime() + " " + sock.remoteAddress + " " + sock.remotePort);
+      const closeMessage = `CLOSED: ${curTime()} - ${sock.remoteAddress} :${sock.remotePort}`
+      console.log(closeMessage);
+      sockInfo.listMessages.push(closeMessage)
     });
   });
 
