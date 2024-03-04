@@ -17,7 +17,17 @@ app.get("/", (req, res) => {
 app.get("/messages", (req, res) => {
   res.send({ messages: sockInfo.listMessages });
 });
+app.use((err, req, res, next) => {
+  res.send({error:'yes'});
+})
 
 app.listen(port, host, () => {
   console.log(`App listening on port ${port}`);
+});
+
+process.on('uncaughtException', (err) => {
+  console.log('whoops! there was an unhandled exception',err);
+});
+process.on('unhandledRejection', function(reason, p){
+  console.log('whoops! there was an unhandled rejection',err);
 });
