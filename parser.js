@@ -95,6 +95,8 @@ const parse = (data) => {
     //   }
 
       return {
+        rawMessage:data,
+        imei,
         date_hex,
         date,
         time_hex,
@@ -159,6 +161,7 @@ const parse = (data) => {
     let dm_data = data.slice(x + 4, y);
 
     return {
+        rawMessage:data,
       packet_length,
       reserve,
       imei,
@@ -190,6 +193,7 @@ const parse = (data) => {
     let msg = data.slice(56, data.length - 5);
     let passkey = data.slice(data.length - 7, data.length - 1);
     return {
+        rawMessage:data,
       imei,
       vlt_msg_ver,
       bot,
