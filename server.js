@@ -8,6 +8,8 @@ const curTime = () => {
   return moment().utcOffset("+05:30").format()
 }
 
+
+
 const startServer = () => {
   const sockInfo = {};
   sockInfo.listMessages = [];
@@ -18,8 +20,18 @@ const startServer = () => {
 
   let sockets = [];
 
+  const ipInfo = (type) => {
+    return {
+      ip : sock.remoteAddress,
+      port : sock.remotePort,
+      type,
+      time : curTime()
+    }
+
+  }
+
   server.on("connection", function (sock) {
-    const connectionMsg = `CONNECTED: ${curTime()} - ${sock.remoteAddress} :${sock.remotePort}`;
+    const connectionMsg = ipInfo("Connection");
     console.log(connectionMsg);
     sockInfo.listMessages.push(connectionMsg);
     
@@ -31,12 +43,10 @@ const startServer = () => {
       // Write the data back to all the connected, the client will receive it as data from the server
 
       const message = {
-        ip : sock.remoteAddress,
-        port : sock.remotePort ,
+        ...ipInfo("DATA"),
         ...parse(data),
-        time: curTime()
       }
-      // console.log(message);
+      console.log(message);
       sockInfo.listMessages.push(message);
       while (sockInfo.listMessages.length > 100) {
         sockInfo.listMessages.shift();
@@ -52,7 +62,7 @@ const startServer = () => {
         );
       });
       if (index !== -1) sockets.splice(index, 1);
-      const closeMessage = `CLOSED: ${curTime()} - ${sock.remoteAddress} :${sock.remotePort}`
+      const closeMessage = ipInfo("Closed")
       console.log(closeMessage);
       sockInfo.listMessages.push(closeMessage)
     });
