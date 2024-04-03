@@ -20,17 +20,19 @@ const startServer = () => {
 
   let sockets = [];
 
-  const ipInfo = (type) => {
-    return {
-      ip : sock.remoteAddress,
-      port : sock.remotePort,
-      type,
-      time : curTime()
-    }
-
-  }
+  
 
   server.on("connection", function (sock) {
+
+    const ipInfo = (type) => {
+      return {
+        ip : sock.remoteAddress,
+        port : sock.remotePort,
+        type,
+        time : curTime()
+      }
+  
+    }
     const connectionMsg = ipInfo("Connection");
     console.log(connectionMsg);
     sockInfo.listMessages.push(connectionMsg);
