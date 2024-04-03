@@ -2,6 +2,7 @@ const net = require("net");
 const moment = require("moment");
 const port = 7070;
 const host = "0.0.0.0";
+const {parse} = require('./parser')
 
 const curTime = () => {
   return moment().utcOffset("+05:30").format()
@@ -28,14 +29,13 @@ const startServer = () => {
 
     sock.on("data", function (data) {
       // Write the data back to all the connected, the client will receive it as data from the server
-      const message =
-        sock.remoteAddress +
-        ":" +
-        sock.remotePort +
-        " - " +
-        curTime() +
-        " - " +
-        data;
+
+      const message = {
+        ip : sock.remoteAddress,
+        port : sock.remotePort ,
+        ...parse(data),
+        time: curTime()
+      }
       // console.log(message);
       sockInfo.listMessages.push(message);
       while (sockInfo.listMessages.length > 100) {

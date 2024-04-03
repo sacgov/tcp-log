@@ -6,6 +6,7 @@ const port = 3000;
 const host = "0.0.0.0";
 
 const server = require("./server");
+const { sampleMessages } = require("./sampleMessages");
 const sockInfo = server.startServer();
 
 // app.use(helmet());
@@ -15,19 +16,21 @@ app.get("/", (req, res) => {
 });
 
 app.get("/messages", (req, res) => {
-  res.send({ messages: sockInfo.listMessages });
+  let messages = sockInfo.listMessages;
+  // messages = sampleMessages;
+  res.send({ messages });
 });
 app.use((err, req, res, next) => {
-  res.send({error:'yes'});
-})
+  res.send({ error: "yes" });
+});
 
 app.listen(port, host, () => {
   console.log(`App listening on port ${port}`);
 });
 
-process.on('uncaughtException', (err) => {
-  console.log('whoops! there was an unhandled exception',err);
+process.on("uncaughtException", (err) => {
+  console.log("whoops! there was an unhandled exception", err);
 });
-process.on('unhandledRejection', function(reason, p){
-  console.log('whoops! there was an unhandled rejection',err);
+process.on("unhandledRejection", function (reason, p) {
+  console.log("whoops! there was an unhandled rejection", err);
 });
