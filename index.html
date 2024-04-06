@@ -85,8 +85,7 @@
         for (let i = 0; i < messages.length; i++) {
           let msg = messages[i];
           const item = document.createElement("li");
-          item.classList.add("json-container")
-          item.innerHTML = prettyPrintJson.toHtml(msg);
+          item.innerHTML = `${msg.imei} - ${msg.ip} -${msg.dateTime} - ${msg.rawMessage}`;
           messageUL.appendChild(item);
         }
       };

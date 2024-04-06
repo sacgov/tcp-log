@@ -28,8 +28,7 @@ const startServer = () => {
       };
     };
     const connectionMsg = ipInfo("Connection");
-    console.log(connectionMsg);
-    sockInfo.listMessages.push(connectionMsg);
+    sockInfo.listMessages.push( {rawMessage : JSON.stringify(connectionMsg), ...connectionMsg});
 
     sockets.push(sock);
 
@@ -42,7 +41,6 @@ const startServer = () => {
         ...ipInfo("DATA"),
         ...parse(data),
       };
-      console.log(message);
       sockInfo.listMessages.push(message);
       while (sockInfo.listMessages.length > 100) {
         sockInfo.listMessages.shift();
@@ -59,7 +57,8 @@ const startServer = () => {
       });
       if (index !== -1) sockets.splice(index, 1);
       const closeMessage = ipInfo("Closed");
-      console.log(closeMessage);
+      
+    sockInfo.listMessages.push( {rawMessage : JSON.stringify(closeMessage), ...closeMessage});
       sockInfo.listMessages.push(closeMessage);
     });
   });

@@ -21,7 +21,7 @@ app.get("/table", (req, res) => {
 
 app.get("/messages", (req, res) => {
   let messages = sockInfo.listMessages;
-  // messages = sampleMessages;
+  messages = sampleMessages;
   res.send({ messages });
 });
 app.use((err, req, res, next) => {
