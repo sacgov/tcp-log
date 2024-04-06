@@ -5,7 +5,7 @@ const host = "0.0.0.0";
 const { parse } = require("./parser");
 
 const curTime = () => {
-  return moment().utcOffset("+05:30").format("lll");
+  return moment().utcOffset("+05:30").format('MMM Do, hh:mm:ss a');;
 };
 
 const startServer = () => {
