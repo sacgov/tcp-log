@@ -11,7 +11,7 @@ const constructDate = (yy, mm, dd, h, m, s) => {
   dateTime.set("second", s);
   dateTime.add('minutes',330);
 
-  return dateTime.format('lll');
+  return dateTime.format('MMM Do, hh:mm:ss a');;
 };
 
 const dateWithParseInt = (date_hex, time_hex) => {
