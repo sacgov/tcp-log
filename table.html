@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Epick Messages</title>
+    <style>
+      body {
+        margin: 0;
+        padding-bottom: 3rem;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+      /* #filter {
+        position: sticky; 
+            top: 20px; 
+            background-color: rgb(32, 165, 20); 
+            color: white; 
+            padding: 10px; 
+      } */
+      #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+      #messages > li {
+        padding: 0.5rem 1rem;
+      }
+      #messages > li:nth-child(odd) {
+        background: #efefef;
+      }
+    </style>
+    <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/pretty-print-json@2.1/dist/css/pretty-print-json.css>
+
+    <script src=https://cdn.jsdelivr.net/npm/pretty-print-json@2.1/dist/pretty-print-json.min.js></script>
+
+    <link href="https://unpkg.com/tabulator-tables@6.2.0/dist/css/tabulator.min.css" rel="stylesheet">
+ <script  src="https://unpkg.com/tabulator-tables@6.2.0/dist/js/tabulator.min.js"></script>
+
+  </head>
+  <body>
+
+    <div id="filter">
+      <br>
+      <br>
+      &nbsp; &nbsp; &nbsp; &nbsp; IMEI Filter :    <input id="imeiFilter">
+      <br>
+      <br>
+    </div>
+    <div id="lastUpdateTop"></div>
+    
+    <!-- <ul id="messages"></ul> -->
+
+    <div id="example-table"></div>
+    
+
+    <div id="lastUpdateBottom"></div>
+
+    <script>
+      const updateRefreshTime = () => {
+        const lastUpdatedTop= document.getElementById("lastUpdateTop");
+      const lastUpdatedBottom = document.getElementById("lastUpdateBottom");
+        const updatedTimeText =  "  Last Browser Refreshed: " + new Date().toLocaleString();
+        lastUpdatedTop.innerHTML = updatedTimeText;
+      lastUpdatedBottom.innerHTML = updatedTimeText;
+      };
+      updateRefreshTime();
+
+
+
+
+      
+     
+
+      
+
+      var IMEIFilter = "";
+
+      var currentIMEIFilter = "";
+      var currentMessages = [];
+
+      var table = new Tabulator("#example-table", {
+            height: 1000, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+            data: [], //assign data to table
+            layout:"fitColumns", //fit columns to width of table (optional)
+            columns:[ 
+                {title: "IMEI", field: "imei",  width:200},
+                {title: "Date", field: "date"},
+                {title: "Time", field: "time"},
+                {title: "Trigger", field: "trigger_switch"},
+                {title: "CAM", field: "cam_switch"},
+                {title: "INT Voltage", field: "voltage"},
+                {title: "Ext Voltahe", field: "adc"},
+                {title: "Latitude", field: "lat"},
+                {title: "Longitude", field: "long"},
+                {title: "Battery", field: "battery_status"},
+                {title: "Charging", field: "charger_status"}
+            ],
+        });
+
+
+      const updateUIWithMessages = () => {
+
+        console.log(currentMessages)
+        let prot10Messages = currentMessages.filter(message => message.protocol = "10");
+        console.log(prot10Messages);
+        table.replaceData(prot10Messages)
+      };
+
+
+
+      const fetchAndUpdateMessages = () => {
+        return fetch("/messages")
+          .then((response) => response.json())
+          .then((data) => {currentMessages = data.messages; updateUIWithMessages();});
+      }
+
+     
+
+
+      fetchAndUpdateMessages()
+      setInterval(fetchAndUpdateMessages, 5000);
+
+      
+      const imeiFilterInputEle = document.getElementById('imeiFilter');
+      imeiFilterInputEle.addEventListener('input', (e)=> {
+        currentIMEIFilter =  e.target.value;
+        table.setFilter("imei","like", currentIMEIFilter);
+      });
+
+
+
+    </script>
+  </body>
+</html>

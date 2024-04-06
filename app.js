@@ -15,9 +15,13 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
+app.get("/table", (req, res) => {
+  res.sendFile(path.join(__dirname, "table.html"));
+});
+
 app.get("/messages", (req, res) => {
   let messages = sockInfo.listMessages;
-  // messages = sampleMessages;
+  messages = sampleMessages;
   res.send({ messages });
 });
 app.use((err, req, res, next) => {

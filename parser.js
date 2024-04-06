@@ -6,7 +6,6 @@ const parse = (data) => {
 
   const header = data.slice(0, 4);
 
-
   if (header === "3a3a") {
     const packet_length = data.slice(4, 6);
     const length = parseInt(packet_length, 16);
@@ -14,7 +13,8 @@ const parse = (data) => {
     const imei = data.slice(10, 26);
     const isn = data.slice(26, 30);
     const protocol = data.slice(30, 32);
-    if (protocol === "10" || protocol == "20") {
+    let prot_10message = {}
+    if (protocol === "10" || protocol === "20") {
       //regular heartbeat
 
       const date_hex = data.slice(32, 38);
@@ -52,50 +52,48 @@ const parse = (data) => {
       const io_index = data.slice(120, 122);
       const io_len = data.slice(122, 124);
       const io_status = data.slice(124, 132);
+      console.log(io_status)
       let io_data = parseInt(io_status, 16).toString(2).padStart(32, "0");
+      console.log(io_data,"io_data")
       io_data = io_data.replace("b", "0");
-    //   let io_variables = [
-    //     "Trigger Switch",
-    //     "Cam Switch",
-    //     "Extra",
-    //     "PAS",
-    //     "Charger Status",
-    //     "Headlight",
-    //     "Battery Status",
-    //     "Horn",
-    //     "Left Brake",
-    //     "Right Brake",
-    //     "Left Indicator",
-    //     "Right Indicator",
-    //     "Sweat mode",
-    //     "Ignition Sensor",
-    //     "Hall effect power",
-    //     "Extra 2",
-    //   ];
-    //   for (let i = 0; i < io_variables.length; i++) {
-    //     console.log(io_variables[i], " :", (end = ""));
-    //     if (io_data[31 - i] === "1") {
-    //       console.log("ON");
-    //     } else if (io_data[31 - i] === "0") {
-    //       console.log("OFF");
-    //     } else {
-    //       console.log("Something else: ", io_data[31 - i]);
-    //     }
-    //   }
+        let io_variables = [
+          "trigger_switch",
+          "cam_switch",
+          "extra_iodata",
+          "PAS",
+          "charger_status",
+          "headlight",
+          "battery_status",
+          "horn",
+          "left_brake",
+          "right_brake",
+          "left_indicator",
+          "right_indicator",
+          "sweat_mode",
+          "ignition_sensor",
+          "hall_effeect_power",
+          "extra_2_iodata",
+        ];
+        const io_data_json = {};
+        for (let i = 0; i < io_variables.length; i++) {
+            let bit = io_data[31 - i]
+          if ( bit === "1") {
+            io_data_json[io_variables[i]] = "ON"
+          } else if (bit === "0") {
+            io_data_json[io_variables[i]] = "OFF"
+          } else {
+            
+            io_data_json[io_variables[i]] = `NA : ${bit}`
+          }
+        }
 
-      //   let adc_index = data.slice(132, 134);
-      //   let adc_len = data.slice(134, 136);
-      //   let adc_data = data.slice(136, 148);
-      //   let stop = data.slice(148, 152);
+        let adc_index = data.slice(132, 134);
+        let adc_len = data.slice(134, 136);
+        let adc_data = data.slice(136, 148);
 
-    //   if (stop === "2323") {
-    //     console.log("DATA PARSING : Accurate");
-    //   } else {
-    //     console.log("DATA PARSING : Utterly Failed");
-    //   }
 
-      return {
-        rawMessage:data,
+        return   {
+        rawMessage: data,
         imei,
         date_hex,
         date,
@@ -104,6 +102,7 @@ const parse = (data) => {
         lat,
         long,
         speed,
+        protocol,
 
         course,
         mnc,
@@ -125,6 +124,11 @@ const parse = (data) => {
         io_index,
         io_len,
         io_status,
+        adc_index,
+        adc_len,
+        adc_data,
+        ...io_data_json
+
       };
     }
   } else if (header === "2a2a") {
@@ -161,7 +165,7 @@ const parse = (data) => {
     let dm_data = data.slice(x + 4, y);
 
     return {
-        rawMessage:data,
+      rawMessage: data,
       packet_length,
       reserve,
       imei,
@@ -193,7 +197,7 @@ const parse = (data) => {
     let msg = data.slice(56, data.length - 5);
     let passkey = data.slice(data.length - 7, data.length - 1);
     return {
-        rawMessage:data,
+      rawMessage: data,
       imei,
       vlt_msg_ver,
       bot,
@@ -206,11 +210,13 @@ const parse = (data) => {
     };
   } else {
     return {
-        data,
-        error : "header not matching"
-    }
+      data,
+      error: "header not matching",
+    };
   }
 };
+
+// console.log(parse("3a3a2b00040868019069203595056810180406082f2e01e0f872086b272000000031000006000046002a0500f000010500000000080205000000000010040000000111060000000000002323"))
 
 module.exports = {
   parse,
