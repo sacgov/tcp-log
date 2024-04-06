@@ -4,7 +4,7 @@ const constructDate = (yy, mm, dd, h, m, s) => {
   const dateTime = moment();
 
   dateTime.set("year", `20${yy}`);
-  dateTime.set("month", mm); // April
+  dateTime.set("month", mm - 1); 
   dateTime.set("date", dd);
   dateTime.set("hour", h);
   dateTime.set("minute", m);
