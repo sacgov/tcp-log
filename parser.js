@@ -1,4 +1,41 @@
-let k = "";
+const moment = require("moment");
+
+const constructDate = (yy, mm, dd, h, m, s) => {
+  const dateTime = moment();
+
+  dateTime.set("year", `20${yy}`);
+  dateTime.set("month", mm); // April
+  dateTime.set("date", dd);
+  dateTime.set("hour", h);
+  dateTime.set("minute", m);
+  dateTime.set("second", s);
+  dateTime.add('minutes',330);
+
+  return dateTime.format('lll');
+};
+
+const dateWithParseInt = (date_hex, time_hex) => {
+  return constructDate(
+    parseInt(date_hex.slice(0, 2), 16),
+    parseInt(date_hex.slice(2, 4), 16),
+    parseInt(date_hex.slice(4, 6), 16),
+    parseInt(time_hex.slice(0, 2), 16),
+    parseInt(time_hex.slice(2, 4), 16),
+    parseInt(time_hex.slice(4, 6), 16)
+  );
+};
+
+const dateWithOutParseInt = (date_hex, time_hex) => {
+  return constructDate(
+    date_hex.slice(0, 2),
+    date_hex.slice(2, 4),
+    date_hex.slice(4, 6),
+
+    time_hex.slice(0, 2),
+    time_hex.slice(2, 4),
+    time_hex.slice(4, 6)
+  );
+};
 
 const parse = (data) => {
   data = data.replace(/\s/g, "");
@@ -13,20 +50,13 @@ const parse = (data) => {
     const imei = data.slice(10, 26);
     const isn = data.slice(26, 30);
     const protocol = data.slice(30, 32);
-    let prot_10message = {}
     if (protocol === "10" || protocol === "20") {
       //regular heartbeat
 
       const date_hex = data.slice(32, 38);
-      const date = `${parseInt(date_hex.slice(4, 6), 16)}/${parseInt(
-        date_hex.slice(2, 4),
-        16
-      )}/${parseInt(date_hex.slice(0, 2), 16)}`;
       const time_hex = data.slice(38, 44);
-      const time = `${parseInt(time_hex.slice(0, 2), 16)}:${parseInt(
-        time_hex.slice(2, 4),
-        16
-      )}:${parseInt(time_hex.slice(4, 6), 16)}`;
+      const dateTime = dateWithParseInt(date_hex, time_hex);
+
       const lat = parseInt(data.slice(44, 52), 16) / 1800000;
       const long = parseInt(data.slice(52, 60), 16) / 1800000;
 
@@ -52,54 +82,49 @@ const parse = (data) => {
       const io_index = data.slice(120, 122);
       const io_len = data.slice(122, 124);
       const io_status = data.slice(124, 132);
-      console.log(io_status)
+      console.log(io_status);
       let io_data = parseInt(io_status, 16).toString(2).padStart(32, "0");
-      console.log(io_data,"io_data")
+      console.log(io_data, "io_data");
       io_data = io_data.replace("b", "0");
-        let io_variables = [
-          "trigger_switch",
-          "cam_switch",
-          "extra_iodata",
-          "PAS",
-          "charger_status",
-          "headlight",
-          "battery_status",
-          "horn",
-          "left_brake",
-          "right_brake",
-          "left_indicator",
-          "right_indicator",
-          "sweat_mode",
-          "ignition_sensor",
-          "hall_effeect_power",
-          "extra_2_iodata",
-        ];
-        const io_data_json = {};
-        for (let i = 0; i < io_variables.length; i++) {
-            let bit = io_data[31 - i]
-          if ( bit === "1") {
-            io_data_json[io_variables[i]] = "ON"
-          } else if (bit === "0") {
-            io_data_json[io_variables[i]] = "OFF"
-          } else {
-            
-            io_data_json[io_variables[i]] = `NA : ${bit}`
-          }
+      let io_variables = [
+        "trigger_switch",
+        "cam_switch",
+        "extra_iodata",
+        "PAS",
+        "charger_status",
+        "headlight",
+        "battery_status",
+        "horn",
+        "left_brake",
+        "right_brake",
+        "left_indicator",
+        "right_indicator",
+        "sweat_mode",
+        "ignition_sensor",
+        "hall_effeect_power",
+        "extra_2_iodata",
+      ];
+      const io_data_json = {};
+      for (let i = 0; i < io_variables.length; i++) {
+        let bit = io_data[31 - i];
+        if (bit === "1") {
+          io_data_json[io_variables[i]] = "ON";
+        } else if (bit === "0") {
+          io_data_json[io_variables[i]] = "OFF";
+        } else {
+          io_data_json[io_variables[i]] = `NA : ${bit}`;
         }
+      }
 
-        let adc_index = data.slice(132, 134);
-        let adc_len = data.slice(134, 136);
-        let adc_data = data.slice(136, 148);
+      let adc_index = data.slice(132, 134);
+      let adc_len = data.slice(134, 136);
+      let adc_data = data.slice(136, 148);
 
-
-        return   {
-            header,
+      return {
+        header,
         rawMessage: data,
         imei,
-        date_hex,
-        date,
-        time_hex,
-        time,
+        dateTime,
         lat,
         long,
         speed,
@@ -115,6 +140,8 @@ const parse = (data) => {
         satelites,
         hdop,
         adc,
+        date_hex,
+        time_hex,
 
         odo_index,
         odo_len,
@@ -128,8 +155,7 @@ const parse = (data) => {
         adc_index,
         adc_len,
         adc_data,
-        ...io_data_json
-
+        ...io_data_json,
       };
     }
   } else if (header === "2a2a") {
@@ -140,15 +166,9 @@ const parse = (data) => {
     let protocol = data.slice(30, 32);
 
     const date_hex = data.slice(32, 38);
-    const date = `${parseInt(date_hex.slice(4, 6), 16)}/${parseInt(
-      date_hex.slice(2, 4),
-      16
-    )}/${parseInt(date_hex.slice(0, 2), 16)}`;
+
     const time_hex = data.slice(38, 44);
-    const time = `${parseInt(time_hex.slice(0, 2), 16)}:${parseInt(
-      time_hex.slice(2, 4),
-      16
-    )}:${parseInt(time_hex.slice(4, 6), 16)}`;
+    const dateTime = dateWithOutParseInt(date_hex, time_hex);
 
     const lat = parseInt(data.slice(44, 52), 16) / 1800000;
     const long = parseInt(data.slice(52, 60), 16) / 1800000;
@@ -166,15 +186,16 @@ const parse = (data) => {
     let dm_data = data.slice(x + 4, y);
 
     return {
-        header,
+      header,
       rawMessage: data,
       packet_length,
       reserve,
       imei,
       reserve_2,
       protocol,
-      date,
-      time,
+      date_hex,
+      time_hex,
+      dateTime,
       lat,
       long,
       flag,
@@ -212,7 +233,7 @@ const parse = (data) => {
     };
   } else {
     return {
-        header,
+      header,
       data,
       error: "header not matching",
     };
