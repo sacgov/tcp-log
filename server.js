@@ -28,7 +28,7 @@ const startServer = () => {
       return {
         ip : sock.remoteAddress,
         port : sock.remotePort,
-        type,
+        header :type,
         time : curTime()
       }
   

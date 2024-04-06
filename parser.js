@@ -93,6 +93,7 @@ const parse = (data) => {
 
 
         return   {
+            header,
         rawMessage: data,
         imei,
         date_hex,
@@ -165,6 +166,7 @@ const parse = (data) => {
     let dm_data = data.slice(x + 4, y);
 
     return {
+        header,
       rawMessage: data,
       packet_length,
       reserve,
@@ -210,6 +212,7 @@ const parse = (data) => {
     };
   } else {
     return {
+        header,
       data,
       error: "header not matching",
     };
