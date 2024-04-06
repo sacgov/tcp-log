@@ -2,13 +2,11 @@ const net = require("net");
 const moment = require("moment");
 const port = 7070;
 const host = "0.0.0.0";
-const {parse} = require('./parser')
+const { parse } = require("./parser");
 
 const curTime = () => {
-  return moment().utcOffset("+05:30").format()
-}
-
-
+  return moment().utcOffset("+05:30").format("lll");
+};
 
 const startServer = () => {
   const sockInfo = {};
@@ -20,23 +18,19 @@ const startServer = () => {
 
   let sockets = [];
 
-  
-
   server.on("connection", function (sock) {
-
     const ipInfo = (type) => {
       return {
-        ip : sock.remoteAddress,
-        port : sock.remotePort,
-        header :type,
-        time : curTime()
-      }
-  
-    }
+        ip: sock.remoteAddress,
+        port: sock.remotePort,
+        header: type,
+        dateTime: curTime(),
+      };
+    };
     const connectionMsg = ipInfo("Connection");
     console.log(connectionMsg);
     sockInfo.listMessages.push(connectionMsg);
-    
+
     sockets.push(sock);
 
     sock.setEncoding("hex");
@@ -47,7 +41,7 @@ const startServer = () => {
       const message = {
         ...ipInfo("DATA"),
         ...parse(data),
-      }
+      };
       console.log(message);
       sockInfo.listMessages.push(message);
       while (sockInfo.listMessages.length > 100) {
@@ -64,13 +58,13 @@ const startServer = () => {
         );
       });
       if (index !== -1) sockets.splice(index, 1);
-      const closeMessage = ipInfo("Closed")
+      const closeMessage = ipInfo("Closed");
       console.log(closeMessage);
-      sockInfo.listMessages.push(closeMessage)
+      sockInfo.listMessages.push(closeMessage);
     });
   });
 
-  server.on('error', console.log);
+  server.on("error", console.log);
 
   return sockInfo;
 };
