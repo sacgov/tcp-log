@@ -123,8 +123,13 @@
       
       const imeiFilterInputEle = document.getElementById('imeiFilter');
       imeiFilterInputEle.addEventListener('input', (e)=> {
+
         currentIMEIFilter =  e.target.value;
-        table.setFilter("imei","like", currentIMEIFilter);
+        if(currentIMEIFilter == "") {
+            table.clearFilter();
+        } else {
+            table.setFilter("imei","like", currentIMEIFilter);
+        }
       });
 
 
