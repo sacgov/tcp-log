@@ -7,6 +7,9 @@ const host = "0.0.0.0";
 
 const server = require("./server");
 const { sampleMessages } = require("./sampleMessages");
+const { error } = require("console");
+
+app.use(express.json());
 const sockInfo = server.startServer();
 
 // app.use(helmet());
@@ -24,7 +27,24 @@ app.get("/messages", (req, res) => {
   // messages = sampleMessages;
   res.send({ messages });
 });
+
+app.post("/send-cmd", (req, res) => {
+  const cmd = req.body.cmd;
+  if (!cmd) {
+    res.send({ error: "cmd is not entered" });
+  }
+  const imei = req.body.imei;
+  if (!cmd) {
+    res.send({ error: "cmd is not entered" });
+  }
+  if (!imei) {
+    res.send({ error: "imei is not entered" });
+  }
+  server.sendCommand(imei, cmd);
+  res.send({ success: true, cmd });
+});
 app.use((err, req, res, next) => {
+  console.log(err);
   res.send({ error: "yes" });
 });
 

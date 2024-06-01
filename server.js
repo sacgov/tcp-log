@@ -3,9 +3,10 @@ const moment = require("moment");
 const port = 7070;
 const host = "0.0.0.0";
 const { parse } = require("./parser");
+const Commands = require("./commands");
 
 const curTime = () => {
-  return moment().utcOffset("+05:30").format('MMM Do, hh:mm:ss a');;
+  return moment().utcOffset("+05:30").format("MMM Do, hh:mm:ss a");
 };
 
 const startServer = () => {
@@ -28,7 +29,10 @@ const startServer = () => {
       };
     };
     const connectionMsg = ipInfo("Connection");
-    sockInfo.listMessages.push( {rawMessage : JSON.stringify(connectionMsg), ...connectionMsg});
+    sockInfo.listMessages.push({
+      rawMessage: JSON.stringify(connectionMsg),
+      ...connectionMsg,
+    });
 
     sockets.push(sock);
 
@@ -41,6 +45,7 @@ const startServer = () => {
         ...ipInfo("DATA"),
         ...parse(data),
       };
+      updateSockMap(message.imei, sock);
       sockInfo.listMessages.push(message);
       while (sockInfo.listMessages.length > 100) {
         sockInfo.listMessages.shift();
@@ -57,8 +62,11 @@ const startServer = () => {
       });
       if (index !== -1) sockets.splice(index, 1);
       const closeMessage = ipInfo("Closed");
-      
-    sockInfo.listMessages.push( {rawMessage : JSON.stringify(closeMessage), ...closeMessage});
+
+      sockInfo.listMessages.push({
+        rawMessage: JSON.stringify(closeMessage),
+        ...closeMessage,
+      });
       sockInfo.listMessages.push(closeMessage);
     });
   });
@@ -68,6 +76,41 @@ const startServer = () => {
   return sockInfo;
 };
 
+const sockMap = {};
+
+const updateSockMap = (imei, sock) => {
+  if (!imei) {
+    console.log("imei cannot be null ", imei);
+    return;
+  }
+  console.log("sockmap update for imei ", imei);
+
+  sockMap[imei] = sock;
+};
+
+const sendCommand = (imei, cmd) => {
+  if (!imei || !cmd) {
+    console.log("imei or command is null", imei, cmd);
+    return;
+  }
+
+  if (!Commands[cmd]) {
+    console.log("invalid command", imei, cmd);
+  }
+
+  if (!sockMap[imei]) {
+    console.log("socket not found for ", imei, cmd);
+  }
+  console.log("start");
+  console.log(imei);
+  console.log(cmd);
+  console.log("end");
+
+  sockMap[imei].write(cmd);
+};
+
 module.exports = {
   startServer,
+  sockMap,
+  sendCommand,
 };
