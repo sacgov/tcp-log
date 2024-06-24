@@ -1,4 +1,4 @@
-// node message.js --message message --ip ipAdresss --port port --repeat timeInSeconds
+// node message.js --message message --ip ipAdresss --port port --repeat timeInSeconds --times reapeatTimes
 
 // check how commander works
 // add the above options
