@@ -69,9 +69,8 @@ const startServer = () => {
       const parsedCloseMessage = {
         rawMessage: JSON.stringify(closeMessage),
         ...closeMessage,
-      };
-      storeMessage(parsedCloseMessage);
-      console.log('connection closed', parsedCloseMessage);
+      });
+      sockInfo.listMessages.push(closeMessage);
     });
   });
 
