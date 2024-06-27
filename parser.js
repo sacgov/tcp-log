@@ -84,9 +84,9 @@ const parseMessage = (data) => {
       const io_len = data.slice(122, 124);
       const io_status = data.slice(124, 132);
       console.log(io_status);
-      let io_data = parseInt(io_status, 16).toString(2).padStart(32, "0");
-      console.log(io_data, "io_data");
-      io_data = io_data.replace("b", "0");
+      let io_data = parseInt(io_status, 16).toString(2).padStart(32, '0');
+      console.log(io_data, 'io_data');
+      io_data = io_data.replace('b', '0');
       let io_variables = [
         'trigger_switch',
         'cam_switch',
