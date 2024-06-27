@@ -83,8 +83,10 @@ const parseMessage = (data) => {
       const io_index = data.slice(120, 122);
       const io_len = data.slice(122, 124);
       const io_status = data.slice(124, 132);
-      let io_data = parseInt(io_status, 16).toString(2).padStart(32, '0');
-      io_data = io_data.replace('b', '0');
+      console.log(io_status);
+      let io_data = parseInt(io_status, 16).toString(2).padStart(32, "0");
+      console.log(io_data, "io_data");
+      io_data = io_data.replace("b", "0");
       let io_variables = [
         'trigger_switch',
         'cam_switch',
@@ -238,16 +240,6 @@ const parseMessage = (data) => {
       error: 'header not matching',
     };
   }
-};
-
-const enhance = (data) => {
-  data.received_time = curTime();
-  data.received_time_moment = moment();
-  return data;
-};
-
-const parse = (data) => {
-  return enhance(parseMessage(data));
 };
 
 // console.log(parse("3a3a2b00040868019069203595056810180406082f2e01e0f872086b272000000031000006000046002a0500f000010500000000080205000000000010040000000111060000000000002323"))

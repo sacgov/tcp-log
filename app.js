@@ -22,8 +22,8 @@ app.get('/table', (req, res) => {
   res.sendFile(path.join(__dirname, 'table.html'));
 });
 
-app.get('/messages', (req, res) => {
-  let messages = server.sockInfo.listMessages;
+app.get("/messages", (req, res) => {
+  let messages = sockInfo.listMessages;
   // messages = sampleMessages;
   res.send({ messages });
 });
@@ -45,13 +45,7 @@ app.post('/send-cmd', (req, res) => {
 });
 app.use((err, req, res, next) => {
   console.log(err);
-  res.send({ error: 'yes' });
-});
-
-app.get('/db-all-get', function (req, res) {
-  const filename = `db.sqlite`;
-  res.set('Content-Disposition', `attachment; filename="${filename}"`);
-  res.sendFile(`${__dirname}/database.sqlite`);
+  res.send({ error: "yes" });
 });
 
 app.listen(port, host, () => {

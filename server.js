@@ -1,18 +1,12 @@
-const net = require('net');
-
-const { storeMessage } = require('./storeMessagesInDb');
-const { parse } = require('./parser');
-const Commands = require('./commands');
-const { curTime } = require('./time');
-
+const net = require("net");
+const moment = require("moment");
 const port = 7070;
-const host = '0.0.0.0';
+const host = "0.0.0.0";
+const { parse } = require("./parser");
+const Commands = require("./commands");
 
-const sockInfo = {};
-
-const processMessage = (parsedMessage) => {
-  sockInfo.listMessages.push(parsedMessage);
-  storeMessage(parsedMessage);
+const curTime = () => {
+  return moment().utcOffset("+05:30").format("MMM Do, hh:mm:ss a");
 };
 
 const startServer = () => {
@@ -34,14 +28,12 @@ const startServer = () => {
         dateTime: curTime(),
       };
     };
-    const openMessage = ipInfo('ConnectionOpen');
+    const connectionMsg = ipInfo("Connection");
+    sockInfo.listMessages.push({
+      rawMessage: JSON.stringify(connectionMsg),
+      ...connectionMsg,
+    });
 
-    const parsedOpenMessage = {
-      rawMessage: JSON.stringify(openMessage),
-      ...openMessage,
-    };
-    storeMessage(parsedOpenMessage);
-    console.log('connection opened', parsedOpenMessage);
     sockets.push(sock);
 
     sock.setEncoding('hex');
@@ -82,9 +74,9 @@ const startServer = () => {
     });
   });
 
-  server.on('error', (err) => {
-    console.log('server err', err);
-  });
+  server.on("error", console.log);
+
+  return sockInfo;
 };
 
 const sockMap = {};
@@ -112,7 +104,10 @@ const sendCommand = (imei, cmd) => {
   if (!sockMap[imei]) {
     console.log('socket not found for ', imei, cmd);
   }
-  console.log('running command on ', { imei, cmd });
+  console.log("start");
+  console.log(imei);
+  console.log(cmd);
+  console.log("end");
 
   sockMap[imei].write(cmd);
 };
