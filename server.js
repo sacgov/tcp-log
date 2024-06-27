@@ -43,11 +43,8 @@ const startServer = () => {
     };
     const message = {
       rawMessage: JSON.stringify(connectionMsg),
-      ...ipInfo('Connection'),
-    };
-    processMessage(message);
-
-    console.log('connection message', message);
+      ...connectionMsg,
+    });
 
     sockets.push(sock);
 
@@ -56,12 +53,12 @@ const startServer = () => {
     sock.on('data', function (data) {
       // Write the data back to all the connected, the client will receive it as data from the server
 
-      console.log(data);
+      console.log('received data', data);
       const message = {
         ...ipInfo('DATA'),
         ...parse(data),
       };
-      console.log(message);
+      console.log('parsed data', message);
       updateSockMap(message.imei, sock);
       processMessage(message);
       while (sockInfo.listMessages.length > 2000) {
@@ -121,10 +118,7 @@ const sendCommand = (imei, cmd) => {
   if (!sockMap[imei]) {
     console.log('socket not found for ', imei, cmd);
   }
-  console.log('start');
-  console.log(imei);
-  console.log(cmd);
-  console.log('end');
+  console.log('running command on ', { imei, cmd });
 
   sockMap[imei].write(cmd);
 };

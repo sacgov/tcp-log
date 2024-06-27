@@ -124,13 +124,10 @@
       });
 
       const updateUIWithMessages = () => {
-        console.log(currentMessages);
         let prot10Messages = currentMessages.filter(
           (message) => (message.protocol = '10')
         );
->>>>>>> 6cefd7d (updated resume)
         console.log(prot10Messages);
->>>>>>> ea43bd1 (updated resume)
         table.replaceData(prot10Messages);
         updateRefreshTime();
       };
