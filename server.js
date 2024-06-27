@@ -1,25 +1,22 @@
-const net = require("net");
-const moment = require("moment");
-const port = 7070;
-const host = "0.0.0.0";
-const { parse } = require("./parser");
-const Commands = require("./commands");
+const net = require('net');
 
-const curTime = () => {
-  return moment().utcOffset("+05:30").format("MMM Do, hh:mm:ss a");
-};
+const port = 7070;
+const host = '0.0.0.0';
+const { parse } = require('./parser');
+const Commands = require('./commands');
+const { curTime } = require('./time');
 
 const startServer = () => {
   const sockInfo = {};
   sockInfo.listMessages = [];
   const server = net.createServer();
   server.listen(port, host, () => {
-    console.log("TCP Server is running on port " + port + ".");
+    console.log('TCP Server is running on port ' + port + '.');
   });
 
   let sockets = [];
 
-  server.on("connection", function (sock) {
+  server.on('connection', function (sock) {
     const ipInfo = (type) => {
       return {
         ip: sock.remoteAddress,
@@ -28,7 +25,7 @@ const startServer = () => {
         dateTime: curTime(),
       };
     };
-    const connectionMsg = ipInfo("Connection");
+    const connectionMsg = ipInfo('Connection');
     sockInfo.listMessages.push({
       rawMessage: JSON.stringify(connectionMsg),
       ...connectionMsg,
@@ -36,13 +33,13 @@ const startServer = () => {
 
     sockets.push(sock);
 
-    sock.setEncoding("hex");
+    sock.setEncoding('hex');
 
-    sock.on("data", function (data) {
+    sock.on('data', function (data) {
       // Write the data back to all the connected, the client will receive it as data from the server
 
       const message = {
-        ...ipInfo("DATA"),
+        ...ipInfo('DATA'),
         ...parse(data),
       };
       updateSockMap(message.imei, sock);
@@ -53,7 +50,7 @@ const startServer = () => {
     });
 
     // Add a 'close' event handler to this instance of socket
-    sock.on("close", function (data) {
+    sock.on('close', function (data) {
       let index = sockets.findIndex(function (o) {
         return (
           o.remoteAddress === sock.remoteAddress &&
@@ -61,7 +58,7 @@ const startServer = () => {
         );
       });
       if (index !== -1) sockets.splice(index, 1);
-      const closeMessage = ipInfo("Closed");
+      const closeMessage = ipInfo('Closed');
 
       sockInfo.listMessages.push({
         rawMessage: JSON.stringify(closeMessage),
@@ -71,7 +68,7 @@ const startServer = () => {
     });
   });
 
-  server.on("error", console.log);
+  server.on('error', console.log);
 
   return sockInfo;
 };
@@ -80,31 +77,31 @@ const sockMap = {};
 
 const updateSockMap = (imei, sock) => {
   if (!imei) {
-    console.log("imei cannot be null ", imei);
+    console.log('imei cannot be null ', imei);
     return;
   }
-  console.log("sockmap update for imei ", imei);
+  console.log('sockmap update for imei ', imei);
 
   sockMap[imei] = sock;
 };
 
 const sendCommand = (imei, cmd) => {
   if (!imei || !cmd) {
-    console.log("imei or command is null", imei, cmd);
+    console.log('imei or command is null', imei, cmd);
     return;
   }
 
   if (!Commands[cmd]) {
-    console.log("invalid command", imei, cmd);
+    console.log('invalid command', imei, cmd);
   }
 
   if (!sockMap[imei]) {
-    console.log("socket not found for ", imei, cmd);
+    console.log('socket not found for ', imei, cmd);
   }
-  console.log("start");
+  console.log('start');
   console.log(imei);
   console.log(cmd);
-  console.log("end");
+  console.log('end');
 
   sockMap[imei].write(cmd);
 };
