@@ -38,10 +38,12 @@ const startServer = () => {
     sock.on('data', function (data) {
       // Write the data back to all the connected, the client will receive it as data from the server
 
+      console.log(data);
       const message = {
         ...ipInfo('DATA'),
         ...parse(data),
       };
+      console.log(message);
       updateSockMap(message.imei, sock);
       sockInfo.listMessages.push(message);
       while (sockInfo.listMessages.length > 100) {
