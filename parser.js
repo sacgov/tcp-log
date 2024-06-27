@@ -244,14 +244,10 @@ const parseMessage = (data) => {
 
 const enhance = (data) => {
   data.received_time = curTime();
-<<<<<<< HEAD
-  return data;
-=======
->>>>>>> 64d302d (updated resume)
 };
 
 const parse = (data) => {
-  enhance(parseMessage(data));
+  return enhance(parseMessage(data));
 };
 
 // console.log(parse("3a3a2b00040868019069203595056810180406082f2e01e0f872086b272000000031000006000046002a0500f000010500000000080205000000000010040000000111060000000000002323"))
