@@ -67,6 +67,7 @@ const startServer = () => {
         rawMessage: JSON.stringify(closeMessage),
         ...closeMessage,
       });
+      console.log('connection closed', closeMessage);
       sockInfo.listMessages.push(closeMessage);
     });
   });
