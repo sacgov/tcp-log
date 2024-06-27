@@ -45,7 +45,7 @@ app.post('/send-cmd', (req, res) => {
 });
 app.use((err, req, res, next) => {
   console.log(err);
-  res.send({ error: "yes" });
+  res.send({ error: 'yes' });
 });
 
 app.get('/db-all-get', function (req, res) {

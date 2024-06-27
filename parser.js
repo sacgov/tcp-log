@@ -244,7 +244,10 @@ const parseMessage = (data) => {
 
 const enhance = (data) => {
   data.received_time = curTime();
+<<<<<<< HEAD
   return data;
+=======
+>>>>>>> 64d302d (updated resume)
 };
 
 const parse = (data) => {
