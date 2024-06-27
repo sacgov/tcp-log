@@ -100,11 +100,11 @@
         });
 
       const updateUIWithMessages = () => {
-        let prot10Messages = currentMessages.filter(
-          (message) => (message.protocol = '10')
-        );
-        table.replaceData(prot10Messages);
-        updateRefreshTime();
+
+        console.log(currentMessages)
+        let prot10Messages = currentMessages.filter(message => message.protocol = "10");
+        console.log(prot10Messages);
+        table.replaceData(prot10Messages)
       };
 
       const fetchAndUpdateMessages = () => {
