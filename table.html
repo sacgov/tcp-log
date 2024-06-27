@@ -67,30 +67,37 @@
       };
       updateRefreshTime();
 
-      var IMEIFilter = '';
+
+
+
+      
+     
+
+      
+
+      var IMEIFilter = "";
 
       var currentIMEIFilter = '';
       var currentMessages = [];
 
-      var table = new Tabulator('#example-table', {
-        height: 1000, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
-        data: [], //assign data to table
-        layout: 'fitColumns', //fit columns to width of table (optional)
-        columns: [
-          { title: 'IMEI', field: 'imei', width: 200 },
-          { title: 'DateTime', field: 'dateTime' },
-          { title: 'Type', field: 'header' },
-          { title: 'Trigger', field: 'trigger_switch' },
-          { title: 'CAM', field: 'cam_switch' },
-          { title: 'INT Voltage', field: 'voltage' },
-          { title: 'Ext Voltage', field: 'adc' },
-          { title: 'Latitude', field: 'lat' },
-          { title: 'Longitude', field: 'long' },
-          { title: 'Battery', field: 'battery_status' },
-          { title: 'Charging', field: 'charger_status' },
-          { title: 'Received Time', field: 'received_time' },
-        ],
-      });
+      var table = new Tabulator("#example-table", {
+            height: 1000, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+            data: [], //assign data to table
+            layout:"fitColumns", //fit columns to width of table (optional)
+            columns:[ 
+                {title: "IMEI", field: "imei",  width:200},
+                {title: "DateTime", field: "dateTime"},
+                {title: "Type", field: "header"},
+                {title: "Trigger", field: "trigger_switch"},
+                {title: "CAM", field: "cam_switch"},
+                {title: "INT Voltage", field: "voltage"},
+                {title: "Ext Voltage", field: "adc"},
+                {title: "Latitude", field: "lat"},
+                {title: "Longitude", field: "long"},
+                {title: "Battery", field: "battery_status"},
+                {title: "Charging", field: "charger_status"}
+            ],
+        });
 
       const updateUIWithMessages = () => {
         console.log(currentMessages);
@@ -105,15 +112,16 @@
       const fetchAndUpdateMessages = () => {
         return fetch('/messages')
           .then((response) => response.json())
-          .then((data) => {
-            currentMessages = data.messages;
-            updateUIWithMessages();
-          });
-      };
+          .then((data) => {currentMessages = data.messages; updateUIWithMessages();});
+      }
+
+     
+
 
       fetchAndUpdateMessages();
       setInterval(fetchAndUpdateMessages, 5000);
 
+      
       const imeiFilterInputEle = document.getElementById('imeiFilter');
       imeiFilterInputEle.addEventListener('input', (e) => {
         currentIMEIFilter = e.target.value;
