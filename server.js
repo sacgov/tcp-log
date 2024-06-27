@@ -1,25 +1,12 @@
-const net = require('net');
-
+const net = require("net");
+const moment = require("moment");
 const port = 7070;
-const host = '0.0.0.0';
-const { parse } = require('./parser');
-const Commands = require('./commands');
-const { curTime } = require('./time');
+const host = "0.0.0.0";
+const { parse } = require("./parser");
+const Commands = require("./commands");
 
-const port = 7070;
-const host = '0.0.0.0';
-
-const sockInfo = {};
-
-const processDataMessage = (message) => {
-  sockInfo.push(message);
-  const parsedMessage = parse(message);
-  storeMessage(parsedMessage);
-};
-
-const processMessage = (connectionData) => {
-  sockInfo.listMessages.push(parsedMessage);
-  storeMessage(parsedMessage);
+const curTime = () => {
+  return moment().utcOffset("+05:30").format("MMM Do, hh:mm:ss a");
 };
 
 const startServer = () => {
@@ -42,7 +29,8 @@ const startServer = () => {
         dateTime: curTime(),
       };
     };
-    const message = {
+    const connectionMsg = ipInfo("Connection");
+    sockInfo.listMessages.push({
       rawMessage: JSON.stringify(connectionMsg),
       ...ipInfo('Connection'),
     };
@@ -88,9 +76,7 @@ const startServer = () => {
     });
   });
 
-  server.on('error', (err) => {
-    console.log('server err', err);
-  });
+  server.on("error", console.log);
 
   return sockInfo;
 };
