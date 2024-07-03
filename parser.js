@@ -244,6 +244,7 @@ const parseMessage = (data) => {
 
 const enhance = (data) => {
   data.received_time = curTime();
+  return data;
 };
 
 const parse = (data) => {
