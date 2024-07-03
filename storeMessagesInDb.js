@@ -9,7 +9,7 @@ const storeMessage = (parsedMessage) => {
     error: parsedMessage.error,
   })
     .then((m) => {
-      console.log(m);
+      console.log('stored the message ', m);
     })
     .catch((error) => {
       console.error('Failed to create a new record : ', error);
