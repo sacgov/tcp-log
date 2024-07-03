@@ -22,7 +22,7 @@ app.get('/table', (req, res) => {
   res.sendFile(path.join(__dirname, 'table.html'));
 });
 
-app.get("/messages", (req, res) => {
+app.get('/messages', (req, res) => {
   let messages = sockInfo.listMessages;
   // messages = sampleMessages;
   res.send({ messages });
