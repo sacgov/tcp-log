@@ -1,17 +1,13 @@
-const net = require("net");
-const moment = require("moment");
-const port = 7070;
-const host = "0.0.0.0";
-const { parse } = require("./parser");
-const Commands = require("./commands");
+const net = require('net');
 
-const curTime = () => {
-  return moment().utcOffset("+05:30").format("MMM Do, hh:mm:ss a");
-};
+const port = 7070;
+const host = '0.0.0.0';
+const { parse } = require('./parser');
+const Commands = require('./commands');
+const { curTime } = require('./time');
 
 const startServer = () => {
   const sockInfo = {};
-
   sockInfo.listMessages = [];
   const server = net.createServer();
   server.listen(port, host, () => {
@@ -29,11 +25,12 @@ const startServer = () => {
         dateTime: curTime(),
       };
     };
-    const connectionMsg = ipInfo("Connection");
+    const connectionMsg = ipInfo('Connection');
     sockInfo.listMessages.push({
       rawMessage: JSON.stringify(connectionMsg),
       ...connectionMsg,
     });
+    console.log('connection message', connectionMsg);
 
     sockets.push(sock);
 
@@ -69,13 +66,15 @@ const startServer = () => {
       const parsedCloseMessage = {
         rawMessage: JSON.stringify(closeMessage),
         ...closeMessage,
-      });
-      console.log('connection closed', closeMessage);
-      sockInfo.listMessages.push(closeMessage);
+      };
+      storeMessage(parsedCloseMessage);
+      console.log('connection closed', parsedCloseMessage);
     });
   });
 
-  server.on('error', console.log);
+  server.on('error', (err) => {
+    console.log('server err', err);
+  });
 
   return sockInfo;
 };
