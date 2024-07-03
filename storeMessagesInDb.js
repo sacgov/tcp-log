@@ -11,9 +11,13 @@ const storeMessage = (parsedMessage) => {
     rawMessage: parsedMessage.rawMessage,
     receivedTime: parsedMessage.received_time_moment,
     error: parsedMessage.error,
-  }).catch((error) => {
-    console.error('Failed to create a new record : ', error);
-  });
+  })
+    .then((m) => {
+      console.log(m);
+    })
+    .catch((error) => {
+      console.error('Failed to create a new record : ', error);
+    });
 };
 
 module.exports = {
