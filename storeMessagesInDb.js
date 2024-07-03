@@ -1,8 +1,4 @@
 const Messages = require('./db/message');
-<<<<<<< HEAD
-const { parse } = require('./parser');
-=======
->>>>>>> 3505e06 (changes)
 
 const storeMessage = (parsedMessage) => {
   Messages.create({
@@ -11,6 +7,7 @@ const storeMessage = (parsedMessage) => {
     rawMessage: parsedMessage.rawMessage,
     receivedTime: parsedMessage.received_time_moment,
     error: parsedMessage.error,
+    parsedMessage: parsedMessage,
   }).catch((error) => {
     console.error('Failed to create a new record : ', error);
   });
