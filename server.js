@@ -24,6 +24,7 @@ const processMessage = (connectionData) => {
 
 const startServer = () => {
   const sockInfo = {};
+
   sockInfo.listMessages = [];
   const server = net.createServer();
   server.listen(port, host, () => {
