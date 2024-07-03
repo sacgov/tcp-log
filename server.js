@@ -10,13 +10,7 @@ const host = '0.0.0.0';
 
 const sockInfo = {};
 
-const processDataMessage = (message) => {
-  sockInfo.push(message);
-  const parsedMessage = parse(message);
-  storeMessage(parsedMessage);
-};
-
-const processMessage = (connectionData) => {
+const processMessage = (parsedMessage) => {
   sockInfo.listMessages.push(parsedMessage);
   storeMessage(parsedMessage);
 };
@@ -40,14 +34,14 @@ const startServer = () => {
         dateTime: curTime(),
       };
     };
-    const message = {
-      rawMessage: JSON.stringify(connectionMsg),
-      ...ipInfo('Connection'),
+    const openMessage = ipInfo('ConnectionOpen');
+
+    const parsedOpenMessage = {
+      rawMessage: JSON.stringify(openMessage),
+      ...openMessage,
     };
-    processMessage(message);
-
-    console.log('connection message', message);
-
+    storeMessage(parsedOpenMessage);
+    console.log('connection opened', parsedOpenMessage);
     sockets.push(sock);
 
     sock.setEncoding('hex');
