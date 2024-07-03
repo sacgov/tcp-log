@@ -6,6 +6,22 @@ const { parse } = require('./parser');
 const Commands = require('./commands');
 const { curTime } = require('./time');
 
+const port = 7070;
+const host = '0.0.0.0';
+
+const sockInfo = {};
+
+const processDataMessage = (message) => {
+  sockInfo.push(message);
+  const parsedMessage = parse(message);
+  storeMessage(parsedMessage);
+};
+
+const processMessage = (connectionData) => {
+  sockInfo.listMessages.push(parsedMessage);
+  storeMessage(parsedMessage);
+};
+
 const startServer = () => {
   const sockInfo = {};
   sockInfo.listMessages = [];
@@ -25,12 +41,13 @@ const startServer = () => {
         dateTime: curTime(),
       };
     };
-    const connectionMsg = ipInfo('Connection');
-    sockInfo.listMessages.push({
+    const message = {
       rawMessage: JSON.stringify(connectionMsg),
-      ...connectionMsg,
-    });
-    console.log('connection message', connectionMsg);
+      ...ipInfo('Connection'),
+    };
+    processMessage(message);
+
+    console.log('connection message', message);
 
     sockets.push(sock);
 
