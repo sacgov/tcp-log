@@ -1,5 +1,8 @@
 const Messages = require('./db/message');
+<<<<<<< HEAD
 const { parse } = require('./parser');
+=======
+>>>>>>> 3505e06 (changes)
 
 const storeMessage = (parsedMessage) => {
   Messages.create({

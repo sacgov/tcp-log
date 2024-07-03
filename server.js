@@ -1,7 +1,7 @@
 const net = require('net');
 
 const port = 7070;
-const host ='0.0.0.0';
+const host = '0.0.0.0';
 const { parse } = require('./parser');
 const Commands = require('./commands');
 const { curTime } = require('./time');
@@ -45,6 +45,7 @@ const startServer = () => {
       rawMessage: JSON.stringify(connectionMsg),
       ...connectionMsg,
     });
+    console.log('connection message', connectionMsg);
 
     sockets.push(sock);
 
@@ -80,17 +81,15 @@ const startServer = () => {
       const parsedCloseMessage = {
         rawMessage: JSON.stringify(closeMessage),
         ...closeMessage,
-      });
-      console.log('connection closed', closeMessage);
-      sockInfo.listMessages.push(closeMessage);
+      };
+      storeMessage(parsedCloseMessage);
+      console.log('connection closed', parsedCloseMessage);
     });
   });
 
   server.on('error', (err) => {
     console.log('server err', err);
   });
-
-  return sockInfo;
 };
 
 const sockMap = {};
