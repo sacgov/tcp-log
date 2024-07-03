@@ -48,7 +48,9 @@ app.use((err, req, res, next) => {
   res.send({ error: 'yes' });
 });
 
-app.get('/db-download', function (req, res) {
+app.get('/db-all-get', function (req, res) {
+  const filename = `db.sqlite`;
+  res.set('Content-Disposition', `attachment; filename="${filename}"`);
   res.sendFile(`${__dirname}/database.sqlite`);
 });
 
