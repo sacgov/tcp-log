@@ -59,19 +59,12 @@
       };
       updateRefreshTime();
       
-     
-
-      
-
       var IMEIFilter = "";
 
       var currentIMEIFilter = "";
       var currentMessages = [];
-
-
       const updateUIWithMessages = () => {
         let messages = currentMessages;
-        console.log(currentIMEIFilter)
 
         if(currentIMEIFilter != "") {
           messages = messages.filter((message) => {

@@ -1,15 +1,16 @@
-const moment = require("moment");
+const moment = require('moment');
+const { curTime } = require('./time');
 
 const constructDate = (yy, mm, dd, h, m, s) => {
   const dateTime = moment();
 
-  dateTime.set("year", `20${yy}`);
-  dateTime.set("month", mm - 1); 
-  dateTime.set("date", dd);
-  dateTime.set("hour", h);
-  dateTime.set("minute", m);
-  dateTime.set("second", s);
-  dateTime.add('minutes',330);
+  dateTime.set('year', `20${yy}`);
+  dateTime.set('month', mm - 1);
+  dateTime.set('date', dd);
+  dateTime.set('hour', h);
+  dateTime.set('minute', m);
+  dateTime.set('second', s);
+  dateTime.add('minutes', 330);
 
   return dateTime.format('MMM Do, hh:mm:ss a');
 };
@@ -37,20 +38,20 @@ const dateWithOutParseInt = (date_hex, time_hex) => {
   );
 };
 
-const parse = (data) => {
-  data = data.replace(/\s/g, "");
+const parseMessage = (data) => {
+  data = data.replace(/\s/g, '');
   data = data.toLowerCase();
 
   const header = data.slice(0, 4);
 
-  if (header === "3a3a") {
+  if (header === '3a3a') {
     const packet_length = data.slice(4, 6);
     const length = parseInt(packet_length, 16);
     const lac = data.slice(6, 10);
     const imei = data.slice(10, 26);
     const isn = data.slice(26, 30);
     const protocol = data.slice(30, 32);
-    if (protocol === "10" || protocol === "20") {
+    if (protocol === '10' || protocol === '20') {
       //regular heartbeat
 
       const date_hex = data.slice(32, 38);
@@ -82,35 +83,33 @@ const parse = (data) => {
       const io_index = data.slice(120, 122);
       const io_len = data.slice(122, 124);
       const io_status = data.slice(124, 132);
-      console.log(io_status);
-      let io_data = parseInt(io_status, 16).toString(2).padStart(32, "0");
-      console.log(io_data, "io_data");
-      io_data = io_data.replace("b", "0");
+      let io_data = parseInt(io_status, 16).toString(2).padStart(32, '0');
+      io_data = io_data.replace('b', '0');
       let io_variables = [
-        "trigger_switch",
-        "cam_switch",
-        "extra_iodata",
-        "PAS",
-        "charger_status",
-        "headlight",
-        "battery_status",
-        "horn",
-        "left_brake",
-        "right_brake",
-        "left_indicator",
-        "right_indicator",
-        "sweat_mode",
-        "ignition_sensor",
-        "hall_effeect_power",
-        "extra_2_iodata",
+        'trigger_switch',
+        'cam_switch',
+        'extra_iodata',
+        'PAS',
+        'charger_status',
+        'headlight',
+        'battery_status',
+        'horn',
+        'left_brake',
+        'right_brake',
+        'left_indicator',
+        'right_indicator',
+        'sweat_mode',
+        'ignition_sensor',
+        'hall_effeect_power',
+        'extra_2_iodata',
       ];
       const io_data_json = {};
       for (let i = 0; i < io_variables.length; i++) {
         let bit = io_data[31 - i];
-        if (bit === "1") {
-          io_data_json[io_variables[i]] = "ON";
-        } else if (bit === "0") {
-          io_data_json[io_variables[i]] = "OFF";
+        if (bit === '1') {
+          io_data_json[io_variables[i]] = 'ON';
+        } else if (bit === '0') {
+          io_data_json[io_variables[i]] = 'OFF';
         } else {
           io_data_json[io_variables[i]] = `NA : ${bit}`;
         }
@@ -158,7 +157,7 @@ const parse = (data) => {
         ...io_data_json,
       };
     }
-  } else if (header === "2a2a") {
+  } else if (header === '2a2a') {
     let packet_length = data.slice(4, 6);
     let reserve = data.slice(6, 10);
     let imei = data.slice(10, 26);
@@ -209,7 +208,7 @@ const parse = (data) => {
       data_len,
       dm_data,
     };
-  } else if (header === "1a1a") {
+  } else if (header === '1a1a') {
     let imei = data.slice(4, 19);
     let vlt_msg_ver = data.slice(19, 21);
     let bot = data.slice(21, 24);
@@ -233,11 +232,22 @@ const parse = (data) => {
     };
   } else {
     return {
+      rawMessage: data,
       header,
       data,
-      error: "header not matching",
+      error: 'header not matching',
     };
   }
+};
+
+const enhance = (data) => {
+  data.received_time = curTime();
+  data.received_time_moment = moment();
+  return data;
+};
+
+const parse = (data) => {
+  return enhance(parseMessage(data));
 };
 
 // console.log(parse("3a3a2b00040868019069203595056810180406082f2e01e0f872086b272000000031000006000046002a0500f000010500000000080205000000000010040000000111060000000000002323"))
