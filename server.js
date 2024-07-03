@@ -1,13 +1,27 @@
 const net = require('net');
 
-const port = 7070;
-const host = '0.0.0.0';
+const { storeMessage } = require('./storeMessagesInDb');
 const { parse } = require('./parser');
 const Commands = require('./commands');
 const { curTime } = require('./time');
 
+const port = 7070;
+const host = '0.0.0.0';
+
+const sockInfo = {};
+
+const processDataMessage = (message) => {
+  sockInfo.push(message);
+  const parsedMessage = parse(message);
+  storeMessage(parsedMessage);
+};
+
+const processMessage = (connectionData) => {
+  sockInfo.listMessages.push(parsedMessage);
+  storeMessage(parsedMessage);
+};
+
 const startServer = () => {
-  const sockInfo = {};
   sockInfo.listMessages = [];
   const server = net.createServer();
   server.listen(port, host, () => {
@@ -25,12 +39,13 @@ const startServer = () => {
         dateTime: curTime(),
       };
     };
-    const connectionMsg = ipInfo('Connection');
-    sockInfo.listMessages.push({
+    const message = {
       rawMessage: JSON.stringify(connectionMsg),
-      ...connectionMsg,
-    });
-    console.log('connection message', connectionMsg);
+      ...ipInfo('Connection'),
+    };
+    processMessage(message);
+
+    console.log('connection message', message);
 
     sockets.push(sock);
 
@@ -46,8 +61,8 @@ const startServer = () => {
       };
       console.log('parsed data', message);
       updateSockMap(message.imei, sock);
-      sockInfo.listMessages.push(message);
-      while (sockInfo.listMessages.length > 100) {
+      processMessage(message);
+      while (sockInfo.listMessages.length > 2000) {
         sockInfo.listMessages.shift();
       }
     });
@@ -63,20 +78,18 @@ const startServer = () => {
       if (index !== -1) sockets.splice(index, 1);
       const closeMessage = ipInfo('Closed');
 
-      sockInfo.listMessages.push({
+      const parsedCloseMessage = {
         rawMessage: JSON.stringify(closeMessage),
         ...closeMessage,
-      });
-      console.log('connection closed', closeMessage);
-      sockInfo.listMessages.push(closeMessage);
+      };
+      storeMessage(parsedCloseMessage);
+      console.log('connection closed', parsedCloseMessage);
     });
   });
 
   server.on('error', (err) => {
     console.log('server err', err);
   });
-
-  return sockInfo;
 };
 
 const sockMap = {};
@@ -112,5 +125,6 @@ const sendCommand = (imei, cmd) => {
 module.exports = {
   startServer,
   sockMap,
+  sockInfo,
   sendCommand,
 };

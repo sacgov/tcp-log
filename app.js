@@ -10,7 +10,7 @@ const { sampleMessages } = require('./sampleMessages');
 const { error } = require('console');
 
 app.use(express.json());
-const sockInfo = server.startServer();
+server.startServer();
 
 // app.use(helmet());
 
