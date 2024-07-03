@@ -12,7 +12,7 @@ const Messages = db.define(
       type: DataTypes.STRING,
     },
     rawMessage: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     receivedTime: {
