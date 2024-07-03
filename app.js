@@ -23,7 +23,7 @@ app.get('/table', (req, res) => {
 });
 
 app.get('/messages', (req, res) => {
-  let messages = sockInfo.listMessages;
+  let messages = server.sockInfo.listMessages;
   // messages = sampleMessages;
   res.send({ messages });
 });
