@@ -15,10 +15,9 @@ const startClient = () => {
 
   client.setEncoding("utf-8");
 
-client.on("data", (data) => {
-  console.log("Received data from server:", data);
-  // Example: Display data in a UI or log it
-});
+  client.on("data", (data) => {
+    console.log("Received data from server:", data);
+  });
 
   client.on("close", () => {
     console.log("Connection closed");
@@ -36,7 +35,7 @@ const sendMessage = (client, message) => {
     console.log("Client or message is null", client, message);
     return;
   }
-  client.write(message);
+  client.write(message + "\n"); // add newline character to send the message
 };
 
 const sendCommand = (client, imei, cmd) => {
@@ -47,6 +46,9 @@ const sendCommand = (client, imei, cmd) => {
   const command = `${imei},${cmd}`;
   sendMessage(client, command);
 };
+
+// Start the client
+const client = startClient();
 
 module.exports = {
   startClient,
