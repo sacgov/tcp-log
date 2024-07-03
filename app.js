@@ -48,6 +48,10 @@ app.use((err, req, res, next) => {
   res.send({ error: "yes" });
 });
 
+app.get('/db-download', function (req, res) {
+  res.sendFile(`${__dirname}/database.sqlite`);
+});
+
 app.listen(port, host, () => {
   console.log(`App listening on port ${port}`);
 });
