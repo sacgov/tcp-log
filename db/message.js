@@ -1,7 +1,7 @@
 const db = require('../db/sequelize');
 const { DataTypes } = require('sequelize');
 
-const Habit = db.define(
+const Messages = db.define(
   'Messages',
   {
     // Model attributes are defined here
