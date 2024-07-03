@@ -1,4 +1,4 @@
-const db = require('../db/sequelize');
+const db = require('./db');
 const { DataTypes } = require('sequelize');
 
 const Habit = db.define(
