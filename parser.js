@@ -242,6 +242,7 @@ const parseMessage = (data) => {
 
 const enhance = (data) => {
   data.received_time = curTime();
+  data.received_time_moment = moment();
   return data;
 };
 
