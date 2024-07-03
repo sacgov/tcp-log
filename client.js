@@ -15,15 +15,11 @@ const startClient = () => {
     console.log("Connected to server on port " + port + ".");
   });
 
-  // Sending messages to the server after a delay
-  setTimeout(() => {
-    sendMessage(client, "Hello from client!");
-  }, 2000);
-
   client.setEncoding("utf-8");
 
   client.on("data", (data) => {
-    console.log("Received data from server:", data);
+    console.log("Received data from server:", data.toString());
+    handleResponse(data.toString()); // handle the response from the server
   });
 
   client.on("close", () => {
@@ -38,15 +34,15 @@ const startClient = () => {
 };
 
 const sendMessage = (client, message) => {
-  if (!client || !message) {
+  if (!client ||!message) {
     console.log("Client or message is null", client, message);
     return;
   }
-  client.write(message);
+  client.write(message + "\n"); // add newline character to send the message
 };
 
 const sendCommand = (client, imei, cmd) => {
-  if (!client || !imei || !cmd) {
+  if (!client ||!imei ||!cmd) {
     console.log("Client, imei or command is null", client, imei, cmd);
     return;
   }
@@ -54,8 +50,25 @@ const sendCommand = (client, imei, cmd) => {
   sendMessage(client, command);
 };
 
+const handleResponse = (response) => {
+  // handle the response from the server
+  if (response.startsWith("Server response: ")) {
+    console.log("Server response:", response.substring(15)); // remove the prefix
+  } else {
+    console.log("Unknown response:", response);
+  }
+};
+
 // Start the client
 const client = startClient();
+
+setTimeout(() => {
+  sendMessage(client, "Hello from client!");
+}, 2000);
+
+setTimeout(() => {
+  sendCommand(client, "1234567890", "GET_LOCATION");
+}, 4000);
 
 module.exports = {
   startClient,
