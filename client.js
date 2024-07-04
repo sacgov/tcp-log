@@ -16,7 +16,8 @@ const startClient = () => {
   client.setEncoding("utf-8");
 
   client.on("data", (data) => {
-    console.log("Received data from server:", data);
+    console.log("Received data from server:", data.toString());
+    handleResponse(data.toString()); // handle the response from the server
   });
 
   client.on("close", () => {
@@ -47,8 +48,25 @@ const sendCommand = (client, imei, cmd) => {
   sendMessage(client, command);
 };
 
+const handleResponse = (response) => {
+  // handle the response from the server
+  if (response.startsWith("Server response: ")) {
+    console.log("Server response:", response.substring(15)); // remove the prefix
+  } else {
+    console.log("Unknown response:", response);
+  }
+};
+
 // Start the client
 const client = startClient();
+
+setTimeout(() => {
+  sendMessage(client, "Hello from client!");
+}, 2000);
+
+setTimeout(() => {
+  sendCommand(client, "1234567890", "GET_LOCATION");
+}, 4000);
 
 module.exports = {
   startClient,
