@@ -1,75 +1,68 @@
-const net = require("net");
-const moment = require("moment");
-const host = "0.0.0.0";
+const net = require('net');
+const { parse } = require('./parser');
+const Commands = require('./commands');
+const { curTime } = require('./time');
+
 const port = 7070;
+const host = '0.0.0.0'; 
 
-const curTime = () => {
-  return moment().utcOffset("+05:30").format("MMM Do, hh:mm:ss a");
-};
+const client = new net.Socket();
 
-const startClient = () => {
-  const client = new net.Socket();
-  client.connect(port, host, () => {
-    console.log("Connected to server on port " + port + ".");
-  });
+let isConnected = false;
 
-  client.setEncoding("utf-8");
+client.setEncoding('hex');
 
-  client.on("data", (data) => {
-    console.log("Received data from server:", data.toString());
-    handleResponse(data.toString()); // handle the response from the server
-  });
+client.on('connect', () => {
+  console.log('Connected to server');
+  isConnected = true;
+  const connectionMsg = {
+    type: 'connection',
+    imei: '1234567890', // replace with your device's IMEI
+  };
+  client.write(JSON.stringify(connectionMsg));
+});
 
-  client.on("close", () => {
-    console.log("Connection closed");
-  });
+client.on('data', (data) => {
+  console.log('Received data from server:', data);
+  const parsedData = parseData(data);
+  console.log('Parsed data:', parsedData);
+});
 
-  client.on("error", (err) => {
-    console.log("Error occurred:", err);
-  });
+client.on('close', () => {
+  console.log('Connection closed');
+  isConnected = false;
+});
 
-  return client;
-};
+client.on('error', (err) => {
+  console.log('Error:', err);
+});
 
-const sendMessage = (client, message) => {
-  if (!client ||!message) {
-    console.log("Client or message is null", client, message);
+function parseData(data) {
+  // implement your data parsing logic here
+  return {
+    type: 'data',
+    imei: '1234567890', 
+    data: data.toString(),
+  };
+}
+
+function sendCommand(cmd) {
+  if (!isConnected) {
+    console.log('Not connected to server');
     return;
   }
-  client.write(message + "\n"); // add newline character to send the message
-};
+  client.write(cmd);
+}
 
-const sendCommand = (client, imei, cmd) => {
-  if (!client ||!imei ||!cmd) {
-    console.log("Client, imei or command is null", client, imei, cmd);
-    return;
-  }
-  const command = `${imei},${cmd}`;
-  sendMessage(client, command);
-};
+// connect to the server
+client.connect(port, host);
 
-const handleResponse = (response) => {
-  // handle the response from the server
-  if (response.startsWith("Server response: ")) {
-    console.log("Server response:", response.substring(15)); // remove the prefix
-  } else {
-    console.log("Unknown response:", response);
-  }
-};
-
-// Start the client
-const client = startClient();
-
+// send a command to the server
 setTimeout(() => {
-  sendMessage(client, "Hello from client!");
+  sendCommand('COMMAND_1');
 }, 2000);
 
+// close the connection
 setTimeout(() => {
-  sendCommand(client, "1234567890", "GET_LOCATION");
-}, 4000);
-
-module.exports = {
-  startClient,
-  sendMessage,
-  sendCommand,
-};
+  client.destroy();
+}, 5000);

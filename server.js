@@ -6,9 +6,6 @@ const { parse } = require('./parser');
 const Commands = require('./commands');
 const { curTime } = require('./time');
 
-const port = 7070;
-const host = '0.0.0.0';
-
 const sockInfo = {};
 
 const processMessage = (parsedMessage) => {
