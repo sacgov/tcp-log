@@ -2,6 +2,8 @@ const net = require("net");
 const moment = require("moment");
 const host = "0.0.0.0";
 const port = 7070;
+const { parse } = require("./parser");
+const Commands = require("./commands");
 
 const curTime = () => {
   return moment().utcOffset("+05:30").format("MMM Do, hh:mm:ss a");
@@ -15,9 +17,10 @@ const startClient = () => {
 
   client.setEncoding("utf-8");
 
-  client.on("data", (data) => {
-    console.log("Received data from server:", data);
-  });
+client.on("data", (data) => {
+  console.log("Received data from server:", data);
+  // Example: Display data in a UI or log it
+});
 
   client.on("close", () => {
     console.log("Connection closed");
@@ -46,9 +49,6 @@ const sendCommand = (client, imei, cmd) => {
   const command = `${imei},${cmd}`;
   sendMessage(client, command);
 };
-
-// Start the client
-const client = startClient();
 
 module.exports = {
   startClient,
