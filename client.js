@@ -1,4 +1,6 @@
 const net = require('net');
+const moment = require("moment");
+
 const { parse } = require('./parser');
 const Commands = require('./commands');
 const { curTime } = require('./time');
@@ -22,11 +24,13 @@ client.on('connect', () => {
   client.write(JSON.stringify(connectionMsg));
 });
 
-client.on('data', (data) => {
+function onDataReceived(data) {
   console.log('Received data from server:', data);
   const parsedData = parseData(data);
   console.log('Parsed data:', parsedData);
-});
+}
+
+client.on('data', onDataReceived);
 
 client.on('close', () => {
   console.log('Connection closed');

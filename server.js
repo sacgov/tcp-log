@@ -1,10 +1,12 @@
 const net = require('net');
 
-const port = 7070;
-const host = '0.0.0.0';
+const { storeMessage } = require('./storeMessagesInDb');
 const { parse } = require('./parser');
 const Commands = require('./commands');
 const { curTime } = require('./time');
+
+const port = 7070;
+const host = '0.0.0.0';
 
 const sockInfo = {};
 
@@ -14,7 +16,6 @@ const processMessage = (parsedMessage) => {
 };
 
 const startServer = () => {
-  const sockInfo = {};
   sockInfo.listMessages = [];
   const server = net.createServer();
   server.listen(port, host, () => {
@@ -32,14 +33,14 @@ const startServer = () => {
         dateTime: curTime(),
       };
     };
-    const message = {
-      rawMessage: JSON.stringify(connectionMsg),
-      ...ipInfo('Connection'),
+    const openMessage = ipInfo('ConnectionOpen');
+
+    const parsedOpenMessage = {
+      rawMessage: JSON.stringify(openMessage),
+      ...openMessage,
     };
-    processMessage(message);
-
-    console.log('connection message', message);
-
+    storeMessage(parsedOpenMessage);
+    console.log('connection opened', parsedOpenMessage);
     sockets.push(sock);
 
     sock.setEncoding('hex');
