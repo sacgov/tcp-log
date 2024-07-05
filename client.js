@@ -1,7 +1,6 @@
 const net = require('net');
 const moment = require("moment");
 
-const { parse } = require('./parser');
 const Commands = require('./commands');
 const { curTime } = require('./time');
 
@@ -24,11 +23,11 @@ client.on('connect', () => {
   client.write(JSON.stringify(connectionMsg));
 });
 
-function onDataReceived(data) {
-  console.log('Received data from server:', data);
-  const parsedData = parseData(data);
-  console.log('Parsed data:', parsedData);
-}
+const onDataReceived = (data) => {
+    console.log('Received data from server:', data);
+    const parsedData = parseData(data);
+    console.log('Parsed data:', parsedData);
+  };
 
 client.on('data', onDataReceived);
 
@@ -38,35 +37,18 @@ client.on('close', () => {
 });
 
 client.on('error', (err) => {
-  console.log('Error:', err);
+  console.log('error:', err);
 });
 
-function parseData(data) {
-  // implement your data parsing logic here
-  return {
-    type: 'data',
-    imei: '1234567890', 
-    data: data.toString(),
-  };
-}
 
-function sendCommand(cmd) {
-  if (!isConnected) {
-    console.log('Not connected to server');
-    return;
-  }
-  client.write(cmd);
-}
+const sendCommand = (cmd) => {
+    if (!isConnected) {
+      console.log('Not connected to server');
+      return;
+    }
+    client.write(cmd);
+  };
 
 // connect to the server
 client.connect(port, host);
 
-// send a command to the server
-setTimeout(() => {
-  sendCommand('COMMAND_1');
-}, 2000);
-
-// close the connection
-setTimeout(() => {
-  client.destroy();
-}, 5000);
