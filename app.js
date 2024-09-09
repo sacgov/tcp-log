@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const helmet = require('helmet');
+const _ = require('lodash');
 const port = 3000;
 const host = '0.0.0.0';
 
@@ -82,11 +83,11 @@ app.get('/devices/:trackerId/current_stats', (req, res) => {
   return res.send({
     success: true,
     data: {
-      lat: 12.971599,
-      long: 77.594566,
-      battery: 123,
-      range: 234,
-      batteryLife: 46,
+      lat: _.random(12.5, 13.5),
+      long: _.random(72.5, 77.5),
+      battery: _.random(10, 95),
+      range: _.random(10, 40),
+      batteryLife: _.random(10, 90),
     },
   });
 });
