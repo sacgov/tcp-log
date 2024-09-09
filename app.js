@@ -55,9 +55,16 @@ app.get('/db-all-get', function (req, res) {
   res.sendFile(`${__dirname}/database.sqlite`);
 });
 
-app.post('/devices/:trackerId/send_cmd', (req, res) => {
+app.post('/devices/:trackerId/send-cmd', (req, res) => {
   if (!req.params.trackerId) {
     return res.send({ success: false, error: 'TrackerId is missing' });
+  }
+
+  if (!req.body.cmdType) {
+    return res.send({ success: false, error: 'cmdType is missing' });
+  }
+  if (!req.body.payload) {
+    return res.send({ success: false, error: 'payload is missing' });
   }
 
   if (!req.get('idToken')) {
@@ -70,7 +77,7 @@ app.post('/devices/:trackerId/send_cmd', (req, res) => {
   });
 });
 
-app.get('/devices/:trackerId/current_stats', (req, res) => {
+app.get('/devices/:trackerId/current-stats', (req, res) => {
   if (!req.params.trackerId) {
     return res.send({ success: false, error: 'TrackerId is missing' });
   }
