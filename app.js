@@ -54,6 +54,43 @@ app.get('/db-all-get', function (req, res) {
   res.sendFile(`${__dirname}/database.sqlite`);
 });
 
+app.post('/devices/:trackerId/send_cmd', (req, res) => {
+  if (!req.params.trackerId) {
+    return res.send({ success: false, error: 'TrackerId is missing' });
+  }
+
+  if (!req.get('idToken')) {
+    return res
+      .status(401)
+      .send({ success: false, error: 'idToken is invalid' });
+  }
+  return res.send({
+    success: true,
+  });
+});
+
+app.get('/devices/:trackerId/current_stats', (req, res) => {
+  if (!req.params.trackerId) {
+    return res.send({ success: false, error: 'TrackerId is missing' });
+  }
+
+  if (!req.get('idToken')) {
+    return res
+      .status(401)
+      .send({ success: false, error: 'idToken is invalid' });
+  }
+  return res.send({
+    success: true,
+    data: {
+      lat: 12.971599,
+      long: 77.594566,
+      battery: 123,
+      range: 234,
+      batteryLife: 46,
+    },
+  });
+});
+
 app.listen(port, host, () => {
   console.log(`App listening on port ${port}`);
 });
