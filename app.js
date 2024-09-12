@@ -5,10 +5,10 @@ const helmet = require('helmet');
 const _ = require('lodash');
 const port = 3000;
 const host = '0.0.0.0';
+const { verifyToken } = require('./firebase');
+const { genKey } = require('./encrypt');
 
 const server = require('./server');
-const { sampleMessages } = require('./sampleMessages');
-const { error } = require('console');
 
 app.use(express.json());
 server.startServer();
@@ -55,6 +55,25 @@ app.get('/db-all-get', function (req, res) {
   res.sendFile(`${__dirname}/database.sqlite`);
 });
 
+// for the mobile app
+
+app.get('/user/auth-token', (req, res) => {
+  if (!req.get('ftoken')) {
+    return res.send({ success: false, error: 'ftoken is required' });
+  }
+  verifyToken.then((result) => {
+    if (!result.success) {
+      return res.status(401).send({ success: false, error: 'invalid token' });
+    }
+    return res.send({
+      success: true,
+      data: {
+        token: genKey(result.userId, moment().add(1, 'years').unix()),
+      },
+    });
+  });
+});
+
 app.post('/devices/:trackerId/send-cmd', (req, res) => {
   if (!req.params.trackerId) {
     return res.send({ success: false, error: 'TrackerId is missing' });
@@ -67,14 +86,25 @@ app.post('/devices/:trackerId/send-cmd', (req, res) => {
     return res.send({ success: false, error: 'payload is missing' });
   }
 
-  if (!req.get('idToken')) {
+  const idToken = req.get('idToken');
+
+  if (!idToken) {
     return res
       .status(401)
       .send({ success: false, error: 'idToken is invalid' });
   }
-  return res.send({
-    success: true,
-  });
+
+  verifyToken(idToken)
+    .then(() => {
+      return {
+        success: true,
+      };
+    })
+    .catch(() => {
+      return res
+        .status(401)
+        .send({ success: false, error: 'idToken is invalid' });
+    });
 });
 
 app.get('/devices/:trackerId/current-stats', (req, res) => {
@@ -82,22 +112,35 @@ app.get('/devices/:trackerId/current-stats', (req, res) => {
     return res.send({ success: false, error: 'TrackerId is missing' });
   }
 
-  if (!req.get('idToken')) {
+  const idToken = req.get('idToken');
+
+  if (!idToken) {
     return res
       .status(401)
       .send({ success: false, error: 'idToken is invalid' });
   }
-  return res.send({
-    success: true,
-    data: {
-      lat: _.random(12.5, 13.5),
-      long: _.random(72.5, 77.5),
-      battery: _.random(10, 95),
-      range: _.random(10, 40),
-      batteryLife: _.random(10, 90),
-    },
-  });
+
+  verifyToken(idToken)
+    .then(() => {
+      return res.send({
+        success: true,
+        data: {
+          lat: _.random(12.5, 13.5),
+          long: _.random(72.5, 77.5),
+          battery: _.random(10, 95),
+          range: _.random(10, 40),
+          batteryLife: _.random(10, 90),
+        },
+      });
+    })
+    .catch(() => {
+      return res
+        .status(401)
+        .send({ success: false, error: 'idToken is invalid' });
+    });
 });
+
+// listening to port and error handling
 
 app.listen(port, host, () => {
   console.log(`App listening on port ${port}`);
