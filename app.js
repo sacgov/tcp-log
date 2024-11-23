@@ -144,6 +144,6 @@ app.listen(port, host, () => {
 process.on('uncaughtException', (err) => {
   console.log('whoops! there was an unhandled exception', err);
 });
-process.on('unhandledRejection', function (reason, p) {
+process.on('unhandledRejection', function (err) {
   console.log('whoops! there was an unhandled rejection', err);
 });
