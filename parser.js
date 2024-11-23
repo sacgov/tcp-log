@@ -1,4 +1,5 @@
 const moment = require('moment');
+const _ = require('lodash');
 const { curTime } = require('./time');
 
 const constructDate = (yy, mm, dd, h, m, s) => {
@@ -243,11 +244,28 @@ const parseMessage = (data) => {
 const enhance = (data) => {
   data.received_time = curTime();
   data.received_time_moment = moment();
+  data.batPercentage = calculateBatPercentage(data.voltage);
   return data;
 };
 
 const parse = (data) => {
   return enhance(parseMessage(data));
+};
+
+const calculateBatPercentage = (voltage) => {
+  if (!_.isNumber(voltage)) {
+    return 0;
+  }
+  if (voltage > 50) {
+    return 0;
+  }
+
+  const voltages = [30, 32, 34.8, 35.5, 36, 36.5, 37.25, 38.25, 39.5, 40.5, 60];
+
+  const voltIndex = _.findIndex(voltages, (item) => {
+    return item > voltage;
+  });
+  return voltIndex * 10;
 };
 
 module.exports = {

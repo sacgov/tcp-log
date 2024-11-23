@@ -125,13 +125,7 @@ app.get('/devices/:trackerId/current-stats', (req, res) => {
     if (verification.success) {
       return res.send({
         success: true,
-        data: {
-          lat: _.random(12.5, 13.5),
-          long: _.random(72.5, 77.5),
-          battery: _.random(10, 95),
-          range: _.random(10, 40),
-          batteryLife: _.random(10, 90),
-        },
+        data: server.getLatestMessageResponse(trackerId),
       });
     } else {
       return res

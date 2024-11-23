@@ -130,6 +130,20 @@ const getLatestMessageByIMEI = (imei) => {
   });
 };
 
+const getLatestMessageResponse = (imei) => {
+  const message = getLatestMessageByIMEI;
+  if (!message) {
+    return null;
+  }
+  return {
+    lat: message.lat,
+    long: message.long,
+    battery: message.voltage,
+    range: 0,
+    batteryLife: message.batPercentage,
+  };
+};
+
 module.exports = {
   startServer,
   sendCommand,
