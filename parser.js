@@ -159,6 +159,10 @@ const parseMessage = (data) => {
         adc_data,
         ...io_data_json,
       };
+    } else {
+      return {
+        protocol,
+      };
     }
   } else if (header === '2a2a') {
     let packet_length = data.slice(4, 6);
