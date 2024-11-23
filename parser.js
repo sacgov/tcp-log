@@ -43,8 +43,6 @@ const parseMessage = (data) => {
   data = data.replace(/\s/g, '');
   data = data.toLowerCase();
 
-  console.log('received data', data);
-
   const header = data.slice(0, 4);
 
   if (header === '3a3a') {
@@ -162,6 +160,9 @@ const parseMessage = (data) => {
     } else {
       return {
         protocol,
+        imei,
+        header,
+        rawMessage: data,
       };
     }
   } else if (header === '2a2a') {
@@ -248,7 +249,6 @@ const parseMessage = (data) => {
 };
 
 const enhance = (data) => {
-  console.log('enhance data', data);
   data.received_time = curTime();
   data.received_time_moment = moment();
   data.batPercentage = calculateBatPercentage(data.voltage);
@@ -257,7 +257,6 @@ const enhance = (data) => {
 
 const parse = (data) => {
   data = parseMessage(data);
-  console.log(data, 'parsemessage');
   return enhance(data);
 };
 
