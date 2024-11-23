@@ -43,6 +43,8 @@ const parseMessage = (data) => {
   data = data.replace(/\s/g, '');
   data = data.toLowerCase();
 
+  console.log('received data', data);
+
   const header = data.slice(0, 4);
 
   if (header === '3a3a') {
