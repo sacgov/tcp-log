@@ -242,6 +242,7 @@ const parseMessage = (data) => {
 };
 
 const enhance = (data) => {
+  console.log('enhance data', data);
   data.received_time = curTime();
   data.received_time_moment = moment();
   data.batPercentage = calculateBatPercentage(data.voltage);
@@ -249,7 +250,9 @@ const enhance = (data) => {
 };
 
 const parse = (data) => {
-  return enhance(parseMessage(data));
+  data = parseMessage(data);
+  console.log(data, 'parsemessage');
+  return enhance(data);
 };
 
 const calculateBatPercentage = (voltage) => {

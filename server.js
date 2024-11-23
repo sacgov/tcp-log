@@ -148,5 +148,5 @@ module.exports = {
   startServer,
   sendCommand,
   getLatestMessages,
-  getLatestMessageByIMEI,
+  getLatestMessageResponse,
 };
