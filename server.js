@@ -121,7 +121,7 @@ const sendCommand = (imei, cmd) => {
 };
 
 const getLatestMessages = () => {
-  return sockInfo.listMessages.slice(0, MESSAGE_LIMIT);
+  return sockInfo.listMessages.slice(-MESSAGE_LIMIT);
 };
 
 const getLatestMessageByIMEI = (imei) => {
