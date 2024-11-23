@@ -8,7 +8,7 @@ admin.initializeApp({
 });
 
 const verifyToken = (idToken) => {
-  getAuth()
+  return getAuth()
     .verifyIdToken(idToken)
     .then((decodedToken) => {
       const userId = decodedToken.uid;

@@ -24,7 +24,7 @@ app.get('/table', (req, res) => {
 });
 
 app.get('/messages', (req, res) => {
-  let messages = server.sockInfo.listMessages;
+  let messages = server.getLatestMessages();
   // messages = sampleMessages;
   res.send({ messages });
 });
@@ -44,6 +44,7 @@ app.post('/send-cmd', (req, res) => {
   server.sendCommand(imei, cmd);
   res.send({ success: true, cmd });
 });
+
 app.use((err, req, res, next) => {
   console.log(err);
   res.send({ error: 'yes' });
@@ -120,8 +121,8 @@ app.get('/devices/:trackerId/current-stats', (req, res) => {
       .send({ success: false, error: 'idToken is invalid' });
   }
 
-  verifyToken(idToken)
-    .then(() => {
+  verifyToken(idToken).then((verification) => {
+    if (verification.success) {
       return res.send({
         success: true,
         data: {
@@ -132,12 +133,12 @@ app.get('/devices/:trackerId/current-stats', (req, res) => {
           batteryLife: _.random(10, 90),
         },
       });
-    })
-    .catch(() => {
+    } else {
       return res
         .status(401)
         .send({ success: false, error: 'idToken is invalid' });
-    });
+    }
+  });
 });
 
 // listening to port and error handling

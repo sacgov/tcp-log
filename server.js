@@ -4,11 +4,15 @@ const { storeMessage } = require('./storeMessagesInDb');
 const { parse } = require('./parser');
 const Commands = require('./commands');
 const { curTime } = require('./time');
+const _ = require('lodash');
 
 const port = 7070;
 const host = '0.0.0.0';
 
 const sockInfo = {};
+
+const MESSAGE_LIMIT = 2000;
+const MESSAGE_HARD_LIMIT = 100000;
 
 const processMessage = (parsedMessage) => {
   sockInfo.listMessages.push(parsedMessage);
@@ -56,7 +60,7 @@ const startServer = () => {
       console.log('parsed data', message);
       updateSockMap(message.imei, sock);
       processMessage(message);
-      while (sockInfo.listMessages.length > 2000) {
+      while (sockInfo.listMessages.length > MESSAGE_HARD_LIMIT) {
         sockInfo.listMessages.shift();
       }
     });
@@ -116,9 +120,19 @@ const sendCommand = (imei, cmd) => {
   sockMap[imei].write(cmd);
 };
 
+const getLatestMessages = () => {
+  return sockInfo.listMessages.slice(0, MESSAGE_LIMIT);
+};
+
+const getLatestMessageByIMEI = (imei) => {
+  return _.findLast(sockInfo.listMessages, (messsage) => {
+    return messsage.imei == imei;
+  });
+};
+
 module.exports = {
   startServer,
-  sockMap,
-  sockInfo,
   sendCommand,
+  getLatestMessages,
+  getLatestMessageByIMEI,
 };
