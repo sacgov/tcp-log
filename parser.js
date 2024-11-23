@@ -52,7 +52,7 @@ const parseMessage = (data) => {
     const imei = data.slice(10, 26);
     const isn = data.slice(26, 30);
     const protocol = data.slice(30, 32);
-    if (protocol === '10' || protocol === '20') {
+    if (protocol === '10' || protocol === '20' || protocol === '50') {
       //regular heartbeat
 
       const date_hex = data.slice(32, 38);
