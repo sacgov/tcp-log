@@ -1,14 +1,5 @@
-var admin = require('firebase-admin');
+const admin = require('firebase-admin');
 const { getAuth } = require('firebase/auth');
-
-var serviceAccount = require('./epickbikes-personal.json');
-console.log(serviceAccount);
-
-console.log('verifying app');
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
-console.log('completed verifying app');
 
 const verifyToken = (idToken) => {
   if (admin.apps.length === 0) {
@@ -28,11 +19,6 @@ const verifyToken = (idToken) => {
     });
 };
 
-const init = () => {
-  // dummy function to init this file with require
-};
-
 module.exports = {
   verifyToken,
-  init,
 };

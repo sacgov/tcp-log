@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const _ = require('lodash');
 const port = 3000;
 const host = '0.0.0.0';
+require('./firebase-init');
 const { verifyToken } = require('./firebase');
 const { genKey } = require('./encrypt');
 
