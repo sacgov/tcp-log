@@ -110,7 +110,8 @@ app.post('/devices/:trackerId/send-cmd', (req, res) => {
 });
 
 app.get('/devices/:trackerId/current-stats', (req, res) => {
-  if (!req.params.trackerId) {
+  const trackerId = req.params.trackerId;
+  if (!trackerId) {
     return res.send({ success: false, error: 'TrackerId is missing' });
   }
 
