@@ -121,19 +121,23 @@ app.get('/devices/:trackerId/current-stats', (req, res) => {
       .status(401)
       .send({ success: false, error: 'idToken is invalid' });
   }
-
-  verifyToken(idToken).then((verification) => {
-    if (verification.success) {
-      return res.send({
-        success: true,
-        data: server.getLatestMessageResponse(trackerId),
-      });
-    } else {
-      return res
-        .status(401)
-        .send({ success: false, error: 'idToken is invalid' });
-    }
+  return res.send({
+    success: true,
+    data: server.getLatestMessageResponse(trackerId),
   });
+
+  // verifyToken(idToken).then((verification) => {
+  //   if (verification.success) {
+  //     return res.send({
+  //       success: true,
+  //       data: server.getLatestMessageResponse(trackerId),
+  //     });
+  //   } else {
+  //     return res
+  //       .status(401)
+  //       .send({ success: false, error: 'idToken is invalid' });
+  //   }
+  // });
 });
 
 // listening to port and error handling

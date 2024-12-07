@@ -250,6 +250,10 @@ const parseMessage = (data) => {
 
 const enhance = (data) => {
   data.received_time = curTime();
+  // remove first character or imei
+  if (data.imei) {
+    data.imei = data.imei.slice(1);
+  }
   data.received_time_moment = moment();
   data.batPercentage = calculateBatPercentage(data.voltage);
   return data;
