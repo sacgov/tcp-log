@@ -114,7 +114,9 @@ const sendCommand = (imei, cmd) => {
   }
 
   if (!sockMap[imei]) {
-    console.log('socket not found for ', imei, cmd);
+    console.log('socket not found for to write command', imei, cmd);
+    return
+
   }
   console.log('running command on ', { imei, cmd });
 
@@ -122,7 +124,7 @@ const sendCommand = (imei, cmd) => {
 };
 
 const sendUnlockCommand = (imei) => {
-  sendCommand(imei, "**16VLT;0000;UNLOCK;");
+  sendCommand(imei, "UNLOCK");
 }
 
 const getLatestMessages = () => {

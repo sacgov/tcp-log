@@ -98,11 +98,10 @@ app.post('/devices/:trackerId/send-cmd', (req, res) => {
         .then(() => {
 
             server.sendUnlockCommand(req.params.trackerId);
-            return {
-                success: true,
-            };
+            return res
+                .send({success: true});
         })
-        .catch(() => {
+        .catch((e) => {
             return res
                 .status(401)
                 .send({success: false, error: 'idToken is invalid'});
