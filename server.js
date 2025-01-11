@@ -126,7 +126,7 @@ const getLatestMessages = () => {
 
 const getLatestMessageByIMEI = (imei) => {
   return _.findLast(sockInfo.listMessages, (messsage) => {
-    return messsage.imei == imei;
+    return messsage.imei === imei;
   });
 };
 
@@ -141,6 +141,7 @@ const getLatestMessageResponse = (imei) => {
     battery: message.voltage,
     range: 0,
     batteryLife: message.batPercentage,
+    lockStatus : 'Locked'
   };
 };
 

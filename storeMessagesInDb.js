@@ -1,5 +1,4 @@
 const Messages = require('./db/message');
-const { parse } = require('./parser');
 
 const storeMessage = (parsedMessage) => {
   Messages.create({
