@@ -5,6 +5,7 @@ const { parse } = require('./parser');
 const Commands = require('./commands');
 const { curTime } = require('./time');
 const _ = require('lodash');
+const defaultMessages = require('./defaultMessages');
 
 const port = 7070;
 const host = '0.0.0.0';
@@ -121,11 +122,15 @@ const sendCommand = (imei, cmd) => {
 };
 
 const getLatestMessages = () => {
-  return sockInfo.listMessages.slice(-MESSAGE_LIMIT);
+  let sliced = sockInfo.listMessages.slice(-MESSAGE_LIMIT);
+  sliced.push(...defaultMessages);
+  return sliced;
 };
 
 const getLatestMessageByIMEI = (imei) => {
-  return _.findLast(sockInfo.listMessages, (message) => {
+  const messages = getLatestMessages();
+
+  return _.findLast(messages, (message) => {
     return message.imei === imei;
   });
 };
