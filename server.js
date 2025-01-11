@@ -146,7 +146,8 @@ const getLatestMessageResponse = (imei) => {
     battery: message.voltage,
     range: 0,
     batteryLife: message.batPercentage,
-    lockStatus : 'Locked'
+    lockStatus : 'Locked',
+    lastUpdatedTime:  message.dateTime
   };
 };
 
