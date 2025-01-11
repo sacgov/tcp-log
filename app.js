@@ -2,7 +2,6 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const helmet = require('helmet');
-const _ = require('lodash');
 const port = 3000;
 const host = '0.0.0.0';
 const {verifyToken} = require('./firebase');
@@ -10,10 +9,11 @@ const {genKey} = require('./encrypt');
 
 const server = require('./server');
 
-app.use(express.json());
-server.startServer();
 
-// app.use(helmet());
+app.use(express.json());
+app.use(helmet());
+
+server.startServer();
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
@@ -82,9 +82,6 @@ app.post('/devices/:trackerId/send-cmd', (req, res) => {
     if (!req.body.cmdType) {
         return res.send({success: false, error: 'cmdType is missing'});
     }
-    if (!req.body.payload) {
-        return res.send({success: false, error: 'payload is missing'});
-    }
 
     const idToken = req.get('idToken');
 
@@ -96,6 +93,7 @@ app.post('/devices/:trackerId/send-cmd', (req, res) => {
 
     verifyToken(idToken)
         .then(() => {
+            server.sendUnlockCommand(req.params.trackerId);
             return {
                 success: true,
             };

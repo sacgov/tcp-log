@@ -121,6 +121,10 @@ const sendCommand = (imei, cmd) => {
   sockMap[imei].write(cmd);
 };
 
+const sendUnlockCommand = (imei) => {
+  sendCommand(imei, "**16VLT;0000;UNLOCK;");
+}
+
 const getLatestMessages = () => {
   let sliced = sockInfo.listMessages.slice(-MESSAGE_LIMIT);
   sliced.push(...defaultMessages);
@@ -156,4 +160,5 @@ module.exports = {
   sendCommand,
   getLatestMessages,
   getLatestMessageResponse,
+  sendUnlockCommand
 };
