@@ -1,24 +1,15 @@
-const admin = require('firebase-admin');
-const { getAuth } = require('firebase/auth');
+const {decodeJWT} = require('./jwt-decoder');
+
 
 const verifyToken = (idToken) => {
-  if (admin.apps.length === 0) {
-    console.log('app is not initialised');
+  const user = decodeJWT(idToken);
+  if(!user) {
+    return Promise.reject('User not found');
   } else {
-    console.log('app is  initialised');
+    return user;
   }
-  return getAuth()
-    .verifyIdToken(idToken)
-    .then((decodedToken) => {
-      const userId = decodedToken.uid;
-      return { success: true, userId };
-    })
-    .catch((error) => {
-      console.log('firebase error', error);
-      return { success: false };
-    });
 };
-
+// const verifyToken = () => {}
 module.exports = {
   verifyToken,
 };
