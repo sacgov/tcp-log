@@ -6,7 +6,7 @@ const verifyToken = (idToken) => {
   if(!user) {
     return Promise.reject('User not found');
   } else {
-    return user;
+    return Promise.resolve(user);
   }
 };
 // const verifyToken = () => {}
