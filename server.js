@@ -125,13 +125,13 @@ const getLatestMessages = () => {
 };
 
 const getLatestMessageByIMEI = (imei) => {
-  return _.findLast(sockInfo.listMessages, (messsage) => {
-    return messsage.imei === imei;
+  return _.findLast(sockInfo.listMessages, (message) => {
+    return message.imei === imei;
   });
 };
 
 const getLatestMessageResponse = (imei) => {
-  const message = getLatestMessageByIMEI;
+  const message = getLatestMessageByIMEI(imei);
   if (!message) {
     return null;
   }
