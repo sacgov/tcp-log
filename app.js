@@ -11,7 +11,7 @@ const server = require('./server');
 
 
 app.use(express.json());
-app.use(helmet());
+// app.use(helmet());
 
 server.startServer();
 
