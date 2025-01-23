@@ -119,7 +119,7 @@ const parseMessage = (data) => {
       let adc_index = data.slice(134, 136);
       let adc_len = data.slice(136, 138);
       let adc_data = data.slice(138, 150);
-      let stop=data.slice(150:154)
+      let stop=data.slice(150,154);
 
       return {
         header,
