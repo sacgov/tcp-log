@@ -69,21 +69,21 @@ const parseMessage = (data) => {
       const cell_id = data.slice(68, 72);
       const status_byte = data.slice(72, 80);
       const gms_signal_strength = parseInt(data.slice(80, 82), 16);
-      const voltage = parseInt(data.slice(82, 84), 16);
+      const voltage = parseInt(data.slice(82, 86), 16);
 
-      const satelites = parseInt(data.slice(84, 86), 16);
-      const hdop = data.slice(86, 88);
-      const adc = parseInt(data.slice(88, 92), 16);
+      const satelites = parseInt(data.slice(86, 88), 16);
+      const hdop = data.slice(88, 90);
+      const adc = parseInt(data.slice(90, 94), 16);
 
-      const odo_index = data.slice(92, 94);
-      const odo_len = data.slice(94, 96);
-      const odo_reading = data.slice(96, 106);
-      const rfid_index = data.slice(106, 108);
-      const rfid_len = data.slice(108, 110);
-      const rfid_tag = data.slice(110, 120);
-      const io_index = data.slice(120, 122);
-      const io_len = data.slice(122, 124);
-      const io_status = data.slice(124, 132);
+      const odo_index = data.slice(94, 96);
+      const odo_len = data.slice(96, 98);
+      const odo_reading = data.slice(98, 108);
+      const rfid_index = data.slice(108, 110);
+      const rfid_len = data.slice(110, 112);
+      const rfid_tag = data.slice(112, 122);
+      const io_index = data.slice(122, 124);
+      const io_len = data.slice(124, 126);
+      const io_status = data.slice(126, 134);
       let io_data = parseInt(io_status, 16).toString(2).padStart(32, '0');
       io_data = io_data.replace('b', '0');
       let io_variables = [
@@ -116,9 +116,10 @@ const parseMessage = (data) => {
         }
       }
 
-      let adc_index = data.slice(132, 134);
-      let adc_len = data.slice(134, 136);
-      let adc_data = data.slice(136, 148);
+      let adc_index = data.slice(134, 136);
+      let adc_len = data.slice(136, 138);
+      let adc_data = data.slice(138, 150);
+      let stop=data.slice(150:154)
 
       return {
         header,
@@ -156,6 +157,7 @@ const parseMessage = (data) => {
         adc_len,
         adc_data,
         ...io_data_json,
+        stop
       };
     } else {
       return {

@@ -55,7 +55,7 @@ while k=="":
             cell_id=data[68:72]
             status_byte=data[72:80]
             gms_signal_strength=int(data[80:82],16)
-            voltage=int(data[82:84],16) #internal volatge converted from hex to decimal
+            voltage=int(data[82:84],16) #internal voltage converted from hex to decimal
             print("Voltage in hex : ", data[82:84])
             print("Voltage of the internal battery :",voltage)
             satelites=int(data[84:86],16)
