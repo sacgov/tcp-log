@@ -219,24 +219,26 @@ const parseMessage = (data) => {
       dm_data,
     };
   } else if (header === '1a1a') {
-    let imei = data.slice(4, 19);
-    let vlt_msg_ver = data.slice(19, 21);
-    let bot = data.slice(21, 24);
-    let firm_version = data.slice(24, 30);
-    let ccid = data.slice(30, 50);
-    let ig_status = data.slice(50, 51);
-    let main_volt = data.slice(51, 56);
-    let msg = data.slice(56, data.length - 5);
-    let passkey = data.slice(data.length - 7, data.length - 1);
+
+    const textData = Buffer.from(data, 'hex').toString();
+    let imei = textData.slice(3, 19); // imei number
+    let vltMsgVer = textData.slice(19, 22);
+    let bot = textData.slice(22, 26);
+    let firmVersion = textData.slice(26, 33);
+    let ccid = textData.slice(33, 54);
+    let lockStatus = textData.slice(54, 56);
+    let mainVolt = textData.slice(56, 61);
+    let msg = textData.slice(61, data.length - 5);
+    let passkey = textData.slice(textData.length - 7, textData.length - 1); // passkey (considering last character is ";")
     return {
       rawMessage: data,
       imei,
-      vlt_msg_ver,
+      vltMsgVer,
       bot,
-      firm_version,
+      firmVersion,
       ccid,
-      ig_status,
-      main_volt,
+      lockStatus,
+      mainVolt,
       msg,
       passkey,
     };
