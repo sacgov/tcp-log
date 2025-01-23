@@ -73,7 +73,7 @@ const parseMessage = (data) => {
 
       const satelites = parseInt(data.slice(86, 88), 16);
       const hdop = data.slice(88, 90);
-      const adc = parseInt(data.slice(90, 94), 16);
+      const adc = parseInt(data.slice(90, 94), 16)/1000;
 
       const odo_index = data.slice(94, 96);
       const odo_len = data.slice(96, 98);
