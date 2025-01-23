@@ -227,18 +227,19 @@ const parseMessage = (data) => {
     let firmVersion = textData.slice(26, 32);
     let ccid = textData.slice(33, 53);
     let lockStatus = textData.slice(54, 55);
-    let mainVolt = textData.slice(56, 60);
+    let adc = textData.slice(56, 60);
     let msg = textData.slice(61, data.length - 5);
     let passkey = textData.slice(textData.length - 7, textData.length - 1); // passkey (considering last character is ";")
     return {
       rawMessage: data,
+      header,
       imei,
       vltMsgVer,
       bot,
       firmVersion,
       ccid,
       lockStatus,
-      mainVolt,
+      adc,
       msg,
       passkey,
     };
