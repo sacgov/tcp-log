@@ -221,7 +221,7 @@ const parseMessage = (data) => {
   } else if (header === '1a1a') {
 
     const textData = Buffer.from(data, 'hex').toString();
-    let imei = textData.slice(2, 19); // imei number
+    let imei = textData.slice(2, 18); // imei number
     let vltMsgVer = textData.slice(19, 21);
     let bot = textData.slice(22, 25);
     let firmVersion = textData.slice(26, 32);
