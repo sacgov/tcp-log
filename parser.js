@@ -259,6 +259,12 @@ const enhance = (data) => {
   if (data.imei) {
     data.imei = data.imei.slice(1);
   }
+  if(data.lat) {
+    data.lat = _.round(data.lat, 6);
+  }
+  if(data.long) {
+    data.long = _.round(data.long, 6);
+  }
   data.received_time_moment = moment();
   data.batPercentage = calculateBatPercentage(data.voltage);
   return data;
