@@ -221,13 +221,13 @@ const parseMessage = (data) => {
   } else if (header === '1a1a') {
 
     const textData = Buffer.from(data, 'hex').toString();
-    let imei = textData.slice(3, 19); // imei number
-    let vltMsgVer = textData.slice(19, 22);
-    let bot = textData.slice(22, 26);
-    let firmVersion = textData.slice(26, 33);
-    let ccid = textData.slice(33, 54);
-    let lockStatus = textData.slice(54, 56);
-    let mainVolt = textData.slice(56, 61);
+    let imei = textData.slice(2, 19); // imei number
+    let vltMsgVer = textData.slice(19, 21);
+    let bot = textData.slice(22, 25);
+    let firmVersion = textData.slice(26, 32);
+    let ccid = textData.slice(33, 53);
+    let lockStatus = textData.slice(54, 55);
+    let mainVolt = textData.slice(56, 60);
     let msg = textData.slice(61, data.length - 5);
     let passkey = textData.slice(textData.length - 7, textData.length - 1); // passkey (considering last character is ";")
     return {
