@@ -266,7 +266,7 @@ const enhance = (data) => {
     data.long = _.round(data.long, 6);
   }
   data.received_time_moment = moment();
-  data.batPercentage = calculateBatPercentage(data.voltage);
+  data.batPercentage = calculateBatPercentage(data.adc);
   return data;
 };
 
