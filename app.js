@@ -6,6 +6,7 @@ const port = 3000;
 const host = '0.0.0.0';
 const {verifyToken} = require('./firebase');
 const {genKey} = require('./encrypt');
+const morgan = require('morgan');
 
 const server = require('./server');
 
@@ -14,6 +15,8 @@ app.use(express.json());
 // app.use(helmet());
 
 server.startServer();
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
