@@ -105,27 +105,19 @@ const updateSockMap = (imei, sock) => {
 
 const sendCommand = (imei, cmd) => {
   if (!imei || !cmd) {
-    console.log('imei or command is null', imei, cmd);
+    console.log(`SENDING CMD imei or command is null ${imei} ${cmd}`);
     return;
   }
 
-  if (!Commands[cmd]) {
-    console.log('invalid command', imei, cmd);
-  }
-
   if (!sockMap[imei]) {
-    console.log('socket not found for to write command', imei, cmd);
+    console.log(`SENDING CMD socket not found for to write command ${imei} ${cmd}` );
     return
 
   }
-  console.log('running command on ', { imei, cmd });
+  console.log(`SENDING CMD running command on ${imei} ${cmd}` );
 
   sockMap[imei].write(cmd);
 };
-
-const sendUnlockCommand = (imei) => {
-  sendCommand(imei, "UNLOCK");
-}
 
 const getLatestMessages = () => {
   let sliced = sockInfo.listMessages.slice(-MESSAGE_LIMIT);
@@ -162,5 +154,4 @@ module.exports = {
   sendCommand,
   getLatestMessages,
   getLatestMessageResponse,
-  sendUnlockCommand
 };

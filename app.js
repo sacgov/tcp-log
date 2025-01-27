@@ -7,6 +7,7 @@ const host = '0.0.0.0';
 const {verifyToken} = require('./firebase');
 const {genKey} = require('./encrypt');
 const morgan = require('morgan');
+const commands = require('./commands');
 
 const server = require('./server');
 
@@ -78,7 +79,8 @@ app.get('/user/auth-token', (req, res) => {
 });
 
 app.post('/devices/:trackerId/send-cmd', (req, res) => {
-    if (!req.params.trackerId) {
+    const imei = req.params.trackerId;
+    if (!imei) {
         return res.send({success: false, error: 'TrackerId is missing'});
     }
 
@@ -100,7 +102,10 @@ app.post('/devices/:trackerId/send-cmd', (req, res) => {
     verifyToken(idToken)
         .then(() => {
 
-            server.sendUnlockCommand(req.params.trackerId);
+            const cmd = commands.constructCommand(imei,req.body.cmdType );
+            console.log(`SENDING CMD imei or command is null ${imei} ${cmd}`);
+
+            server.sendCommand(imei, cmd);
             return res
                 .send({success: true});
         })
