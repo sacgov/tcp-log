@@ -17,6 +17,8 @@ const isValidCommand = (cmd) => {
   return Commands.hasOwnProperty(cmd);
 }
 
+const valid = isValidCommand("RELAYON");
+
 // const message = constructCommand('868019069240175','UNLOCK');
 // console.log(message);
 

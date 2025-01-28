@@ -86,7 +86,7 @@ app.post('/devices/:trackerId/send-cmd', (req, res) => {
     if (!req.body.cmdType) {
         return res.send({success: false, error: 'cmdType is missing'});
     }
-    if(commands.isValidCommand(req.body.cmdType)) {
+    if(!commands.isValidCommand(req.body.cmdType)) {
         return res.send({success: false, error: 'this cmdType is not allowed'});
     }
 
