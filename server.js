@@ -142,9 +142,8 @@ const getLatestMessageResponse = (imei) => {
   return {
     lat: message.lat,
     long: message.long,
-    battery: message.adc,
-    range: 0,
-    batteryLife: message.batPercentage,
+    voltage: message.adc,
+    batteryPercentage: message.batPercentage,
     lockStatus : message.trigger_switch,
     lastUpdatedTime:  message.dateTime
   };

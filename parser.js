@@ -108,9 +108,9 @@ const parseMessage = (data) => {
       for (let i = 0; i < io_variables.length; i++) {
         let bit = io_data[31 - i];
         if (bit === '1') {
-          io_data_json[io_variables[i]] = 'UNLOCKED';
+          io_data_json[io_variables[i]] = 'ON';
         } else if (bit === '0') {
-          io_data_json[io_variables[i]] = 'LOCKED';
+          io_data_json[io_variables[i]] = 'OFF';
         } else {
           io_data_json[io_variables[i]] = `NA`;
         }
@@ -264,6 +264,12 @@ const enhance = (data) => {
   }
   if(data.long) {
     data.long = _.round(data.long, 6);
+  }
+
+  if(data.trigger_switch === 'ON') {
+    data.trigger_switch = 'UNLOCKED';
+  } else if (data.trigger_switch === 'OFF') {
+    data.trigger_switch = 'LOCKED';
   }
   data.received_time_moment = moment();
   data.batPercentage = calculateBatPercentage(data.adc);
