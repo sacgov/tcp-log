@@ -129,7 +129,7 @@ const getLatestMessageByIMEI = (imei) => {
   const messages = getLatestMessages();
 
   return _.findLast(messages, (message) => {
-    return message.imei === imei;
+    return message.imei === imei && message.header === '2a2a';
   });
 };
 
@@ -144,7 +144,7 @@ const getLatestMessageResponse = (imei) => {
     battery: message.adc,
     range: 0,
     batteryLife: message.batPercentage,
-    lockStatus : 'Locked',
+    lockStatus : message.trigger_switch,
     lastUpdatedTime:  message.dateTime
   };
 };
