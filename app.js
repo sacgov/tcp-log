@@ -86,8 +86,8 @@ app.post('/devices/:trackerId/send-cmd', (req, res) => {
     if (!req.body.cmdType) {
         return res.send({success: false, error: 'cmdType is missing'});
     }
-    if(req.body.cmdType !== "UNLOCK") {
-        return res.send({success: false, error: 'only cmdType UNLOCK is allowed'});
+    if(commands.isValidCommand(req.body.cmdType)) {
+        return res.send({success: false, error: 'this cmdType is not allowed'});
     }
 
     const idToken = req.get('idToken');
