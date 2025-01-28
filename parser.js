@@ -108,9 +108,9 @@ const parseMessage = (data) => {
       for (let i = 0; i < io_variables.length; i++) {
         let bit = io_data[31 - i];
         if (bit === '1') {
-          io_data_json[io_variables[i]] = 'LOCKED';
-        } else if (bit === '0') {
           io_data_json[io_variables[i]] = 'UNLOCKED';
+        } else if (bit === '0') {
+          io_data_json[io_variables[i]] = 'LOCKED';
         } else {
           io_data_json[io_variables[i]] = `NA`;
         }
