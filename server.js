@@ -129,12 +129,13 @@ const getLatestMessageByIMEI = (imei) => {
   const messages = getLatestMessages();
 
   return _.findLast(messages, (message) => {
-    return message.imei === imei && message.header === '2a2a';
+    return message.imei === imei && message.header === '3a3a';
   });
 };
 
 const getLatestMessageResponse = (imei) => {
   const message = getLatestMessageByIMEI(imei);
+  console.log("MESSAGE NOT FOUND for imei ", imei);
   if (!message) {
     return null;
   }
