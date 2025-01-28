@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const helmet = require('helmet');
 const port = 3000;
 const host = '0.0.0.0';
 const {verifyToken} = require('./firebase');
@@ -17,7 +16,7 @@ app.use(express.json());
 
 server.startServer();
 
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
+app.use(morgan(':method :url :status :res[content-length] :date - :response-time ms'))
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
@@ -107,7 +106,7 @@ app.post('/devices/:trackerId/send-cmd', (req, res) => {
 
             server.sendCommand(imei, cmd);
             return res
-                .send({success: true});
+                .send({success: true, cmd});
         })
         .catch((e) => {
             return res

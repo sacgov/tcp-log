@@ -13,6 +13,9 @@ const constructCommand = (imei, cmd) => {
 
 }
 
+// const message = constructCommand('868019069240175','UNLOCK');
+// console.log(message);
+
 module.exports = {
   constructCommand
 };
