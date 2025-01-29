@@ -2,6 +2,22 @@ const moment = require('moment');
 const _ = require('lodash');
 const { curTime } = require('./time');
 
+const hexToBin = (hexString) => {
+  return parseInt(hexString, 16).toString(2).padStart(hexString.length * 4, '0');
+}
+
+const calculateRelayStatus = (status_byte) => {
+
+  const binString =  hexToBin(status_byte);
+  const relayChar =  binString[binString.length-4];
+  if(relayChar === '0') {
+    return 'OFF';
+  } else {
+    return 'ON';
+  }
+
+}
+
 const constructDate = (yy, mm, dd, h, m, s) => {
   const dateTime = moment();
 
@@ -71,7 +87,7 @@ const parseMessage = (data) => {
       const gms_signal_strength = parseInt(data.slice(80, 82), 16);
       const intVoltage = parseInt(data.slice(82, 86), 16);
 
-      const satelites = parseInt(data.slice(86, 88), 16);
+      const satellites = parseInt(data.slice(86, 88), 16);
       const hdop = data.slice(88, 90);
       const adc = parseInt(data.slice(90, 94), 16)/1000;
 
@@ -138,7 +154,7 @@ const parseMessage = (data) => {
         gms_signal_strength,
         intVoltage,
 
-        satelites,
+        satellites,
         hdop,
         adc,
         date_hex,
@@ -255,6 +271,7 @@ const parseMessage = (data) => {
 
 const enhance = (data) => {
   data.received_time = curTime();
+
   // remove first character or imei
   if (data.imei) {
     data.imei = data.imei.slice(1);
@@ -273,6 +290,10 @@ const enhance = (data) => {
   }
   data.received_time_moment = moment();
   data.batPercentage = calculateBatPercentage(data.adc);
+
+  if(data.status_byte) {
+    data.relayStatus = calculateRelayStatus(data.status_byte);
+  }
   return data;
 };
 
