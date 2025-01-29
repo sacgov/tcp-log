@@ -69,7 +69,7 @@ const parseMessage = (data) => {
       const cell_id = data.slice(68, 72);
       const status_byte = data.slice(72, 80);
       const gms_signal_strength = parseInt(data.slice(80, 82), 16);
-      const voltage = parseInt(data.slice(82, 86), 16);
+      const intVoltage = parseInt(data.slice(82, 86), 16);
 
       const satelites = parseInt(data.slice(86, 88), 16);
       const hdop = data.slice(88, 90);
@@ -136,7 +136,7 @@ const parseMessage = (data) => {
         cell_id,
         status_byte,
         gms_signal_strength,
-        voltage,
+        intVoltage,
 
         satelites,
         hdop,
@@ -281,18 +281,18 @@ const parse = (data) => {
   return enhance(data);
 };
 
-const calculateBatPercentage = (voltage) => {
-  if (!_.isNumber(voltage)) {
+const calculateBatPercentage = (volts) => {
+  if (!_.isNumber(volts)) {
     return 0;
   }
-  if (voltage > 50) {
+  if (volts > 50) {
     return 0;
   }
 
   const voltages = [30, 32, 34.8, 35.5, 36, 36.5, 37.25, 38.25, 39.5, 40.5, 60];
 
   const voltIndex = _.findIndex(voltages, (item) => {
-    return item > voltage;
+    return item > volts;
   });
   return voltIndex * 10;
 };
