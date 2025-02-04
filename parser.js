@@ -6,18 +6,6 @@ const hexToBin = (hexString) => {
   return parseInt(hexString, 16).toString(2).padStart(hexString.length * 4, '0');
 }
 
-const calculateRelayStatus = (status_byte) => {
-
-  const binString =  hexToBin(status_byte);
-  const relayChar =  binString[binString.length-4];
-  if(relayChar === '0') {
-    return 'OFF';
-  } else {
-    return 'ON';
-  }
-
-}
-
 const constructDate = (yy, mm, dd, h, m, s) => {
   const dateTime = moment();
 
@@ -290,10 +278,6 @@ const enhance = (data) => {
   }
   data.received_time_moment = moment();
   data.batPercentage = calculateBatPercentage(data.adc);
-
-  if(data.status_byte) {
-    data.relayStatus = calculateRelayStatus(data.status_byte);
-  }
   return data;
 };
 

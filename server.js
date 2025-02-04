@@ -145,7 +145,7 @@ const getLatestMessageResponse = (imei) => {
     voltage: message.adc,
     batteryPercentage: message.batPercentage,
     lockStatus : message.trigger_switch,
-    relayStatus : message.relayStatus,
+    relayStatus : message.battery_status,
     lastUpdatedTime:  message.dateTime,
   };
 };
