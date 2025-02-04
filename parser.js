@@ -105,7 +105,7 @@ const parseMessage = (data) => {
         'right_indicator',
         'sweat_mode',
         'ignition_sensor',
-        'hall_effeect_power',
+        'hall_effect_power',
         'extra_2_iodata',
       ];
       const io_data_json = {};
@@ -120,7 +120,7 @@ const parseMessage = (data) => {
         }
       }
 
-     let relayStatus  = io_data_json[6];
+     let relayStatus  = io_data[6];
       if (relayStatus === '1') {
         relayStatus = 'ON';
       } else if (relayStatus === '0') {
