@@ -120,6 +120,17 @@ const parseMessage = (data) => {
         }
       }
 
+     let relayStatus  = io_data_json[6];
+      if (relayStatus === '1') {
+        relayStatus = 'ON';
+      } else if (relayStatus === '0') {
+        relayStatus = 'OFF';
+      } else {
+        relayStatus = `NA`;
+      }
+
+
+
       let adc_index = data.slice(134, 136);
       let adc_len = data.slice(136, 138);
       let adc_data = data.slice(138, 150);
@@ -134,6 +145,7 @@ const parseMessage = (data) => {
         long,
         speed,
         protocol,
+        relayStatus,
 
         course,
         mnc,
