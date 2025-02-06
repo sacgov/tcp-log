@@ -10,19 +10,18 @@ const Commands = {
 
 const constructCommand = (imei, cmd) => {
   return Commands[cmd].replace(/__IMEI__/, imei);
-
-}
+};
 
 const isValidCommand = (cmd) => {
   return Commands.hasOwnProperty(cmd);
-}
+};
 
-const valid = isValidCommand("RELAYON");
+const valid = isValidCommand('RELAYON');
 
 // const message = constructCommand('868019069240175','UNLOCK');
 // console.log(message);
 
 module.exports = {
   constructCommand,
-  isValidCommand
+  isValidCommand,
 };

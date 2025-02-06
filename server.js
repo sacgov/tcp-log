@@ -110,11 +110,12 @@ const sendCommand = (imei, cmd) => {
   }
 
   if (!sockMap[imei]) {
-    console.log(`SENDING CMD socket not found for to write command ${imei} ${cmd}` );
-    return
-
+    console.log(
+      `SENDING CMD socket not found for to write command ${imei} ${cmd}`
+    );
+    return;
   }
-  console.log(`SENDING CMD running command on ${imei} ${cmd}` );
+  console.log(`SENDING CMD running command on ${imei} ${cmd}`);
 
   sockMap[imei].write(cmd);
 };
@@ -132,21 +133,40 @@ const getLatestMessageByIMEI = (imei) => {
     return message.imei === imei && message.header === '3a3a';
   });
 };
+const getLatestMessageByIMEIAndValidGPS = (imei) => {
+  const messages = getLatestMessages();
+
+  return _.findLast(messages, (message) => {
+    return (
+      message.imei === imei && message.header === '3a3a' && message.validGPS
+    );
+  });
+};
 
 const getLatestMessageResponse = (imei) => {
   const message = getLatestMessageByIMEI(imei);
-  console.log("MESSAGE NOT FOUND for imei ", imei);
+  console.log('MESSAGE NOT FOUND for imei ', imei);
   if (!message) {
     return null;
   }
+
+  const gpsValidMessage = getLatestMessageByIMEI(imei);
+
+  let lat = 0;
+  let long = 0;
+
+  if (gpsValidMessage) {
+    lat = gpsValidMessage.lat;
+    long = gpsValidMessage.long;
+  }
   return {
-    lat: message.lat,
-    long: message.long,
+    lat,
+    long,
     voltage: message.adc,
     batteryPercentage: message.batPercentage,
-    lockStatus : message.trigger_switch,
-    relayStatus : message.relayStatus,
-    lastUpdatedTime:  message.dateTime,
+    lockStatus: message.trigger_switch,
+    relayStatus: message.relayStatus,
+    lastUpdatedTime: message.dateTime,
   };
 };
 

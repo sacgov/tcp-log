@@ -3,8 +3,10 @@ const _ = require('lodash');
 const { curTime } = require('./time');
 
 const hexToBin = (hexString) => {
-  return parseInt(hexString, 16).toString(2).padStart(hexString.length * 4, '0');
-}
+  return parseInt(hexString, 16)
+    .toString(2)
+    .padStart(hexString.length * 4, '0');
+};
 
 const constructDate = (yy, mm, dd, h, m, s) => {
   const dateTime = moment();
@@ -77,7 +79,7 @@ const parseMessage = (data) => {
 
       const satellites = parseInt(data.slice(86, 88), 16);
       const hdop = data.slice(88, 90);
-      const adc = parseInt(data.slice(90, 94), 16)/1000;
+      const adc = parseInt(data.slice(90, 94), 16) / 1000;
 
       const odo_index = data.slice(94, 96);
       const odo_len = data.slice(96, 98);
@@ -120,7 +122,7 @@ const parseMessage = (data) => {
         }
       }
 
-     let relayStatus  = io_data[6];
+      let relayStatus = io_data[6];
       if (relayStatus === '1') {
         relayStatus = 'ON';
       } else if (relayStatus === '0') {
@@ -129,12 +131,10 @@ const parseMessage = (data) => {
         relayStatus = `NA`;
       }
 
-
-
       let adc_index = data.slice(134, 136);
       let adc_len = data.slice(136, 138);
       let adc_data = data.slice(138, 150);
-      let stop=data.slice(150,154);
+      let stop = data.slice(150, 154);
 
       return {
         header,
@@ -173,7 +173,7 @@ const parseMessage = (data) => {
         adc_len,
         adc_data,
         ...io_data_json,
-        stop
+        stop,
       };
     } else {
       return {
@@ -235,7 +235,6 @@ const parseMessage = (data) => {
       dm_data,
     };
   } else if (header === '1a1a') {
-
     const textData = Buffer.from(data, 'hex').toString();
     let imei = textData.slice(2, 18); // imei number
     let vltMsgVer = textData.slice(19, 21);
@@ -276,20 +275,29 @@ const enhance = (data) => {
   if (data.imei) {
     data.imei = data.imei.slice(1);
   }
-  if(data.lat) {
+  if (data.lat) {
     data.lat = _.round(data.lat, 6);
   }
-  if(data.long) {
+  if (data.long) {
     data.long = _.round(data.long, 6);
   }
 
-  if(data.trigger_switch === 'ON') {
+  if (data.trigger_switch === 'ON') {
     data.trigger_switch = 'UNLOCKED';
   } else if (data.trigger_switch === 'OFF') {
     data.trigger_switch = 'LOCKED';
   }
   data.received_time_moment = moment();
   data.batPercentage = calculateBatPercentage(data.adc);
+
+  // validate location
+
+  const latValidated =
+    data.lat && _.isNumber(data.lat) && data.lat >= 3 && data.lat <= 500;
+  const longValidated =
+    data.long && _.isNumber(data.long) && data.long >= 3 && data.long <= 500;
+  data.validGPS = latValidated && longValidated;
+
   return data;
 };
 
