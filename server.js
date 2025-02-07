@@ -152,8 +152,8 @@ const getLatestMessageResponse = (imei) => {
 
   const gpsValidMessage = getLatestMessageByIMEI(imei);
 
-  let lat = 0;
-  let long = 0;
+  let lat = message.lat;
+  let long = message.long;
 
   if (gpsValidMessage) {
     lat = gpsValidMessage.lat;
