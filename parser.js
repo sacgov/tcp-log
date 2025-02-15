@@ -293,7 +293,7 @@ const enhance = (data) => {
   // validate location
 
   const latValidated =
-    data.lat && _.isNumber(data.lat) && data.lat >= 3 && data.lat <= 500;
+     _.isNumber(data.lat) && data.lat >= 3 && data.lat <= 500;
   const longValidated =
     data.long && _.isNumber(data.long) && data.long >= 3 && data.long <= 500;
   data.validGPS = latValidated && longValidated;
