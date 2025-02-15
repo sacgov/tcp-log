@@ -53,12 +53,10 @@ const startServer = () => {
     sock.on('data', function (data) {
       // Write the data back to all the connected, the client will receive it as data from the server
 
-      console.log('received data', data);
       const message = {
         ...ipInfo('DATA'),
         ...parse(data),
       };
-      console.log('parsed data', message);
       updateSockMap(message.imei, sock);
       processMessage(message);
       while (sockInfo.listMessages.length > MESSAGE_HARD_LIMIT) {
@@ -156,8 +154,12 @@ const getLatestMessageResponse = (imei) => {
   let long = message.long;
 
   if (gpsValidMessage) {
+    console.log("validgps found for imei", imei, JSON.stringify(gpsValidMessage));
     lat = gpsValidMessage.lat;
     long = gpsValidMessage.long;
+  } else {
+    console.log("validgps not found for imei", imei);
+
   }
   return {
     lat,
