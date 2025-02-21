@@ -20,8 +20,6 @@ const options = program.opts();
 const client = new net.Socket();
 
 client.connect(port, ip, () => {
-  console.log(`Connected to server at ${ip}:${port}`);
-  console.log(`Sending ${options.message} ${options.times}`);
 
   var count = 0;
   var interval = setInterval(function () {

@@ -1,6 +1,5 @@
 const net = require('net');
 
-const { storeMessage } = require('./storeMessagesInDb');
 const { parse } = require('./parser');
 const Commands = require('./commands');
 const { curTime } = require('./time');
@@ -17,7 +16,7 @@ const MESSAGE_HARD_LIMIT = 100000;
 
 const processMessage = (parsedMessage) => {
   sockInfo.listMessages.push(parsedMessage);
-  storeMessage(parsedMessage);
+  // storeMessage(parsedMessage);
 };
 
 const startServer = () => {
@@ -154,7 +153,6 @@ const getLatestMessageResponse = (imei) => {
   let long = message.long;
 
   if (gpsValidMessage) {
-    console.log("validgps found for imei", imei, JSON.stringify(gpsValidMessage));
     lat = gpsValidMessage.lat;
     long = gpsValidMessage.long;
   } else {
