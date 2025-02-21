@@ -43,7 +43,7 @@ const startServer = () => {
       rawMessage: JSON.stringify(openMessage),
       ...openMessage,
     };
-    storeMessage(parsedOpenMessage);
+    // storeMessage(parsedOpenMessage);
     console.log('connection opened', parsedOpenMessage);
     sockets.push(sock);
 
@@ -78,7 +78,7 @@ const startServer = () => {
         rawMessage: JSON.stringify(closeMessage),
         ...closeMessage,
       };
-      storeMessage(parsedCloseMessage);
+      // storeMessage(parsedCloseMessage);
       console.log('connection closed', parsedCloseMessage);
     });
   });
