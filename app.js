@@ -103,7 +103,6 @@ app.post('/devices/:trackerId/send-cmd', (req, res) => {
   verifyToken(idToken)
     .then(() => {
       const cmd = commands.constructCommand(imei, req.body.cmdType);
-      console.log(`SENDING CMD after construction ${imei} ${cmd}`);
 
       server.sendCommand(imei, cmd);
       return res.send({ success: true, cmd });

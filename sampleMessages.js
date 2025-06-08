@@ -13,6 +13,8 @@ for (let i = 0; i < 6; i++) {
   sampleMessages = [...sampleMessages, ...sampleMessages];
 }
 
+sampleMessages = [];
+
 module.exports = {
   sampleMessages,
 };

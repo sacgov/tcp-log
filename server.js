@@ -43,8 +43,6 @@ const startServer = () => {
       rawMessage: JSON.stringify(openMessage),
       ...openMessage,
     };
-    // storeMessage(parsedOpenMessage);
-    console.log('connection opened', parsedOpenMessage);
     sockets.push(sock);
 
     sock.setEncoding('hex');
@@ -95,7 +93,6 @@ const updateSockMap = (imei, sock) => {
     console.log('imei cannot be null ', imei);
     return;
   }
-  console.log('sockmap update for imei ', imei);
 
   sockMap[imei] = sock;
 };
@@ -142,7 +139,6 @@ const getLatestMessageByIMEIAndValidGPS = (imei) => {
 
 const getLatestMessageResponse = (imei) => {
   const message = getLatestMessageByIMEI(imei);
-  console.log('MESSAGE NOT FOUND for imei ', imei);
   if (!message) {
     return null;
   }
@@ -155,9 +151,6 @@ const getLatestMessageResponse = (imei) => {
   if (gpsValidMessage) {
     lat = gpsValidMessage.lat;
     long = gpsValidMessage.long;
-  } else {
-    console.log("validgps not found for imei", imei);
-
   }
   return {
     lat,
