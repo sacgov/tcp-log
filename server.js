@@ -116,7 +116,7 @@ const sendCommand = (imei, cmd) => {
 
 const getLatestMessages = () => {
   let sliced = sockInfo.listMessages.slice(-MESSAGE_LIMIT);
-  sliced.push(...defaultMessages);
+  // sliced.push(...defaultMessages);
   return sliced;
 };
 
