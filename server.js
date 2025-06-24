@@ -38,6 +38,8 @@ const startServer = () => {
       };
     };
     const openMessage = ipInfo('ConnectionOpen');
+    // set timeout to 20 mins
+    sock.setTimeout(20*60000)
 
     const parsedOpenMessage = {
       rawMessage: JSON.stringify(openMessage),
